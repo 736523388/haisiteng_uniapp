@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "我的床具",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-loading-page": "/uni_modules/uview-ui/components/u-loading-page/u-loading-page",
+    "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
+  }
+}

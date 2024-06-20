@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "溯源查询",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
+  }
+}

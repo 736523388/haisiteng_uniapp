@@ -1,0 +1,17 @@
+{
+  "navigationBarTitleText": "售后/退款",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-sticky": "/uni_modules/uview-ui/components/u-sticky/u-sticky",
+    "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
+    "u-line": "/uni_modules/uview-ui/components/u-line/u-line",
+    "uni-search-bar": "/uni_modules/uni-search-bar/components/uni-search-bar/uni-search-bar",
+    "uni-icons": "/uni_modules/uni-icons/components/uni-icons/uni-icons",
+    "u-button": "/uni_modules/uview-ui/components/u-button/u-button",
+    "u-empty": "/uni_modules/uview-ui/components/u-empty/u-empty",
+    "u-loadmore": "/uni_modules/uview-ui/components/u-loadmore/u-loadmore",
+    "u-popup": "/uni_modules/uview-ui/components/u-popup/u-popup",
+    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
+    "u-overlay": "/uni_modules/uview-ui/components/u-overlay/u-overlay"
+  }
+}

@@ -1,0 +1,10 @@
+(global["webpackJsonp"]=global["webpackJsonp"]||[]).push([["uni_modules/uview-ui/components/u-steps/u-steps"],{"0047":function(t,n,i){"use strict";i.r(n);var e=i("858a3"),a=i.n(e);for(var u in e)["default"].indexOf(u)<0&&function(t){i.d(n,t,(function(){return e[t]}))}(u);n["default"]=a.a},"03c6":function(t,n,i){"use strict";i.d(n,"b",(function(){return e})),i.d(n,"c",(function(){return a})),i.d(n,"a",(function(){}));var e=function(){var t=this.$createElement;this._self._c},a=[]},"543b":function(t,n,i){"use strict";i.r(n);var e=i("03c6"),a=i("0047");for(var u in a)["default"].indexOf(u)<0&&function(t){i.d(n,t,(function(){return a[t]}))}(u);i("8a82");var c=i("f0c5"),r=Object(c["a"])(a["default"],e["b"],e["c"],!1,null,"a3797834",null,!1,e["a"],void 0);n["default"]=r.exports},"858a3":function(t,n,i){"use strict";(function(t){var e=i("4ea4");Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var a=e(i("06d8")),u={name:"u-steps",mixins:[t.$u.mpMixin,t.$u.mixin,a.default],data:function(){return{}},watch:{children:function(){this.updateChildData()},parentData:function(){this.updateChildData()}},computed:{parentData:function(){return[this.current,this.direction,this.activeColor,this.inactiveColor,this.activeIcon,this.inactiveIcon,this.dot]}},methods:{updateChildData:function(){this.children.map((function(n){t.$u.test.func((n||{}).updateFromParent())&&n.updateFromParent()}))},updateFromChild:function(){this.updateChildData()}},created:function(){this.children=[]}};n.default=u}).call(this,i("543d")["default"])},"8a82":function(t,n,i){"use strict";var e=i("c068"),a=i.n(e);a.a},c068:function(t,n,i){}}]);
+;(global["webpackJsonp"] = global["webpackJsonp"] || []).push([
+    'uni_modules/uview-ui/components/u-steps/u-steps-create-component',
+    {
+        'uni_modules/uview-ui/components/u-steps/u-steps-create-component':(function(module, exports, __webpack_require__){
+            __webpack_require__('543d')['createComponent'](__webpack_require__("543b"))
+        })
+    },
+    [['uni_modules/uview-ui/components/u-steps/u-steps-create-component']]
+]);
