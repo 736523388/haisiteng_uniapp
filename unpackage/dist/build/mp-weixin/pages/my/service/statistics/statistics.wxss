@@ -1,0 +1,1 @@
+.box.data-v-7d3659ae{display:flex;align-items:center;background-color:#fff;box-sizing:border-box;flex-wrap:wrap}.box > view.data-v-7d3659ae{width:25%;text-align:center;border-right:1px solid #ccc;padding:20rpx 0}.box > view.data-v-7d3659ae:nth-child(4n){border-right:none}

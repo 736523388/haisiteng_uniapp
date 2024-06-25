@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "售后历史",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-loading-page": "/uni_modules/uview-ui/components/u-loading-page/u-loading-page",
+    "u-avatar": "/uni_modules/uview-ui/components/u-avatar/u-avatar"
+  }
+}
