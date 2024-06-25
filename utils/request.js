@@ -1,6 +1,6 @@
 import store from '@/store/index.js'; //需要引入store
 import Request from 'luch-request'
-const BASE_URL = 'https://hst.test.cqclxsc.com'
+const BASE_URL = 'https://hst.dev.cqclxsc.com'
 // const BASE_URL = 'http://127.0.0.1:8000'
 // 是否正在刷新状态
 let isRefreshing = false

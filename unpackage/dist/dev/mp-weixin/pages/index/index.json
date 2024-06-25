@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "My Hastens",
-  "usingComponents": {
-    "u-image": "/uni_modules/uview-ui/components/u-image/u-image",
-    "u-button": "/uni_modules/uview-ui/components/u-button/u-button",
-    "custom-tabbar": "/components/custom-tabbar/custom-tabbar"
-  }
-}

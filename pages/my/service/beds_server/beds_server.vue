@@ -132,6 +132,9 @@
 			this.chooseDateList = chooseDateList
 			this.loadData()
 		},
+		onReachBottom() {
+			this.loadData()
+		},
 		methods: {
 			onClick() {
 				this.list = []

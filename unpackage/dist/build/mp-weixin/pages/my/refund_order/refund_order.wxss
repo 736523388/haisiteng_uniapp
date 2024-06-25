@@ -1,1 +1,0 @@
-.chooseDate{width:630rpx;height:100%}.date_choose{background-color:#e5e5e5;border-radius:50rpx;width:45%}.date_choose.active{background-color:#000030;color:#fff}

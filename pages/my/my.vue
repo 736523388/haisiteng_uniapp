@@ -27,7 +27,7 @@
 				<view class="text-xs text-grey">{{is_login ?teams_count:0}}人</view>
 			</view>
 		</view>
-		<view class="bg-white padding margin-top">
+<!-- 		<view class="bg-white padding margin-top">
 			<view class="flex justify-between align-center">
 				<view>商城订单</view>
 				<view class="flex align-center text-sm text-grey"
@@ -48,7 +48,7 @@
 					<view>{{item.label}}</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<!-- <view class="bg-white padding-lr-sm margin-top">
 			<view class="padding-tb flex align-center" :class="{'u-border-top': index > 0}"
 				@click="$globalJump2View(item.path, true)" v-if="item.show === true && (is_login || !item.needLogin )" v-for="(item,index) in menu" :key="item.title">
@@ -106,7 +106,7 @@
 						title: '商城订单',
 						icon: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my/menu_02.png',
 						path: '/pages/my/my_order/my_order',
-						show: false,
+						show: true,
 						needLogin: false,
 						redHot: false
 					},
@@ -168,13 +168,13 @@
 						offset: [0, 0],
 						url: '/pages/my/my_order/my_order?status=3'
 					},
-					// {
-					// 	label: '待评价',
-					// 	img: '/static/icon_rj5jpyh9xsb/comment.png',
-					// 	value: 0,
-					// 	offset: [0, 0],
-					// 	url: '/pages/my/my_order/my_order?status=4'
-					// },
+					{
+						label: '待评价',
+						img: '/static/icon_rj5jpyh9xsb/comment.png',
+						value: 0,
+						offset: [0, 0],
+						url: '/pages/my/my_order/my_order?status=4'
+					},
 					{
 						label: '退款/售后',
 						img: '/static/icon_rj5jpyh9xsb/refund.png',
@@ -227,9 +227,9 @@
 				axios.get('/api/v1/user/order/total').then(res => {
 					console.log(res)
 					this.order_menu[0].value = res.data.t2
-					// this.order_menu[1].value = res.data.t4
+					this.order_menu[1].value = res.data.t4
 					this.order_menu[2].value = res.data.t5
-					this.order_menu[3].value = res.data.refund
+					this.order_menu[4].value = res.data.refund
 				})
 				axios.get('/api/v1/admin/backlog').then(res => {
 					this.$set(this.menu[5], 'redHot', res.data.bed_service > 0 || res.data.intend_customers > 0)

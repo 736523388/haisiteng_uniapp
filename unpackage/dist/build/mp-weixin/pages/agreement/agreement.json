@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "协议与规则",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "u-loading-page": "/uni_modules/uview-ui/components/u-loading-page/u-loading-page",
-    "u-empty": "/uni_modules/uview-ui/components/u-empty/u-empty"
-  }
-}
