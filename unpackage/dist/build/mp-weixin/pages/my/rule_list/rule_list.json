@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "协议与规则",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "u-cell-group": "/uni_modules/uview-ui/components/u-cell-group/u-cell-group",
-    "u-cell": "/uni_modules/uview-ui/components/u-cell/u-cell",
-    "u-line": "/uni_modules/uview-ui/components/u-line/u-line"
-  }
-}
