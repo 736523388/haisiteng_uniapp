@@ -77,10 +77,6 @@
 		margin: 0 auto;
 	}
 
-	.text-xxs {
-		font-size: 18rpx;
-	}
-
 	.container-bar {
 		padding: 10rpx 0;
 	}

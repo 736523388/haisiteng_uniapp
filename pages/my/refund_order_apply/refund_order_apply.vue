@@ -21,7 +21,7 @@
 			</view>
 
 			<view class="margin-top-xl padding" style="color: #666;line-height: 1.5;">
-				<view>温馨提示：<br><br>1. 消费者因个人原因申请退货，包邮商品需要承担返回运费，非包邮商品需要承担送饭两程运费<br>2. 订单一旦取消，无法恢复<br></view>
+				<view>温馨提示：<br><br>1. 消费者因个人原因申请退货，包邮商品需要承担返回运费，非包邮商品需要承担送返两程运费<br>2. 订单一旦取消，无法恢复<br></view>
 			</view>
 		</view>
 
@@ -29,7 +29,7 @@
 			<view class="padding">
 				<view class="text-center text-lg text-bold">取消原因</view>
 				<view class="margin-top-xl padding" style="color: #666;line-height: 1.5;background-color: #f8f8f8;">
-					<view>温馨提示：<br><br>1. 消费者因个人原因申请退货，包邮商品需要承担返回运费，非包邮商品需要承担送饭两程运费<br>2. 订单一旦取消，无法恢复<br></view>
+					<view>温馨提示：<br><br>1. 消费者因个人原因申请退货，包邮商品需要承担返回运费，非包邮商品需要承担送返两程运费<br>2. 订单一旦取消，无法恢复<br></view>
 				</view>
 				<view class="margin-top text-bold">请选择取消订单的原因（必选）：</view>
 				<view class="margin-top padding-lr-sm">

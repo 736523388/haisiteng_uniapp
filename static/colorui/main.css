@@ -1048,6 +1048,10 @@ image {
           文本
  ==================== */
 
+.text-xxs {
+	font-size: 18rpx;
+}
+
 .text-xs {
   font-size: 20rpx;
 }

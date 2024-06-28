@@ -27,7 +27,7 @@
 				<view class="text-xs text-grey">{{is_login ?teams_count:0}}人</view>
 			</view>
 		</view>
-<!-- 		<view class="bg-white padding margin-top">
+		<view class="bg-white padding margin-top">
 			<view class="flex justify-between align-center">
 				<view>商城订单</view>
 				<view class="flex align-center text-sm text-grey"
@@ -48,7 +48,7 @@
 					<view>{{item.label}}</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 		<!-- <view class="bg-white padding-lr-sm margin-top">
 			<view class="padding-tb flex align-center" :class="{'u-border-top': index > 0}"
 				@click="$globalJump2View(item.path, true)" v-if="item.show === true && (is_login || !item.needLogin )" v-for="(item,index) in menu" :key="item.title">

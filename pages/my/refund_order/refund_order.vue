@@ -65,10 +65,15 @@
 							<uni-icons type="help-filled" size="12" color="#808080"></uni-icons>
 						</view>
 					</view>
-					<view v-if="v.refund_available">
+					<view v-if="v.refund_available && item.status == 4">
 						<u-button
 							@click.native="$globalJump2View('/pages/my/refund_order_apply/refund_order_apply?id='+v.id, true)"
-							type="error" size="small" shape="circle" plain :text="'申请' + (item.status == 4 ? '退款':'售后')"></u-button>
+							type="error" size="small" shape="circle" plain text="申请退款"></u-button>
+					</view>
+					<view v-if="v.refund_available && item.status != 4">
+						<u-button
+							@click.native="$globalJump2View('/pages/my/refund_order_product_apply/refund_order_product_apply?id='+v.id, true)"
+							type="error" size="small" shape="circle" plain text="申请售后"></u-button>
 					</view>
 					<view v-if="!v.refund_available && v.refund_status === 0">
 						<u-button

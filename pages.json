@@ -420,7 +420,7 @@
 			"path" : "pages/my/refund_order_apply/refund_order_apply",
 			"style" : 
 			{
-				"navigationBarTitleText" : "售后申请",
+				"navigationBarTitleText" : "申请退款",
 				"enablePullDownRefresh" : false
 			}
 		},
@@ -429,6 +429,14 @@
 			"style" : 
 			{
 				"navigationBarTitleText" : "售后历史",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/refund_order_product_apply/refund_order_product_apply",
+			"style" : 
+			{
+				"navigationBarTitleText" : "申请售后",
 				"enablePullDownRefresh" : false
 			}
 		}

@@ -24,11 +24,13 @@
 						<u--image :src="item.cover" width="330rpx" height="330rpx" mode="aspectFill" />
 						<view style="padding: 4rpx 10rpx 10rpx 10rpx;">
 							<view class="text-sm" style="height: 60rpx;line-height: 30rpx;overflow: hidden;">
-								<u--text :lines="2" :text="item.name" size="24rpx"></u--text>
+								<text class="u-line-2">{{item.name}}</text>
 							</view>
-							<view style="margin-top: 10rpx;"><text class="text-xs"
-									style="margin-right: 6rpx;">¥</text><text
-									class="text-df">{{item.price_selling}}</text></view>
+							<view class="margin-top-sm padding-bottom-xs flex align-center">
+								<uni-tag v-if="item.activity_title != null" :text="item.activity_title" size="mini" type="error"></uni-tag>
+								<text class="text-xs margin-lr-xs">¥</text>
+								<text class="text-df">{{item.price_selling}}</text>
+							</view>
 						</view>
 					</navigator>
 				</view>
