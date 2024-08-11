@@ -53,29 +53,24 @@
 						</view>
 					</view>
 				</view>
-				<view class="flex justify-between align-center padding-bottom padding-top-sm">
+				<view class="flex justify-between align-center padding-bottom padding-top-sm" v-if="item.status > 4">
 					<view class="text-sm text-grey">
 						<view v-if="v.refund_status > 0"
 							@click="$globalJump2View('/pages/my/refund_order_detail/refund_order_detail?id='+v.refund_id, true)">
 							<text>该商品已申请售后</text>
 							<uni-icons type="right" size="12" color="#808080"></uni-icons>
 						</view>
-						<view v-if="!v.refund_available && v.refund_status == 0" @click="showRefundOut(v.timeout_datetime)">
+						<view v-if="!v.refund_available && v.refund_status == -1" @click="showRefundOut(v.timeout_datetime)">
 							<text>该商品已超过售后期</text>
 							<uni-icons type="help-filled" size="12" color="#808080"></uni-icons>
 						</view>
 					</view>
-					<view v-if="v.refund_available && item.status == 4">
-						<u-button
-							@click.native="$globalJump2View('/pages/my/refund_order_apply/refund_order_apply?id='+v.id, true)"
-							type="error" size="small" shape="circle" plain text="申请退款"></u-button>
-					</view>
 					<view v-if="v.refund_available && item.status != 4">
 						<u-button
-							@click.native="$globalJump2View('/pages/my/refund_order_product_apply/refund_order_product_apply?id='+v.id, true)"
+							@click.native="$globalJump2View('/pages/my/refund_order_product_apply/refund_order_product_apply?id='+v.id + '&amount='+v.price_real + '&number='+v.stock_sales, true)"
 							type="error" size="small" shape="circle" plain text="申请售后"></u-button>
 					</view>
-					<view v-if="!v.refund_available && v.refund_status === 0">
+					<view v-if="!v.refund_available && v.refund_status === -1">
 						<u-button
 							@click.native="showRefundOut(v.timeout_datetime)"
 							type="primary" disabled size="small" shape="circle" plain text="申请售后"></u-button>
@@ -87,27 +82,46 @@
 					</view>
 				</view>
 			</view>
+			<view class="flex justify-between align-center padding-bottom padding-top-sm" v-if="item.status == 4 || item.status == 0">
+				<view class="text-sm text-grey">
+					<view v-if="item.refund_status > 0" @click="$globalJump2View('/pages/my/refund_order_detail/refund_order_detail?id='+item.refund_id, true)">
+						<text>该商品已申请退款</text>
+						<uni-icons type="right" size="12" color="#808080"></uni-icons>
+					</view>
+				</view>
+				<view v-if="item.refund_status > 0">
+					<u-button
+						@click.native="$globalJump2View('/pages/my/refund_order_detail/refund_order_detail?id='+item.refund_id, true)"
+						type="error" size="small" shape="circle" plain text="退款详情"></u-button>
+				</view>
+				<view v-else>
+					<u-button
+						@click.native="$globalJump2View('/pages/my/refund_order_apply/refund_order_apply?order_no='+item.order_no, true)"
+						type="error" size="small" shape="circle" plain text="申请退款"></u-button>
+				</view>
+			</view>
 		</view>
 		<view v-if="active !== 0" class="bg-white margin-top-sm radius-sm container-xl" v-for="(item, index) in list"
 			:key="item.id">
 			<view
 				class="flex justify-between align-center u-border-bottom padding-top-sm padding-bottom-xs padding-lr-sm">
-				<view class="text-sm">服务单号：{{item.code}}</view>
+				<view class="text-sm">服务单号：{{item.code}}<text class="padding-lr-sm text-sm text-red" v-if="item.type == 1 && item.step_status == 10">已退款：￥{{item.real_refund_amount}}</text></view>
 				<view><uni-icons type="shop" size="16"></uni-icons>{{item.type === 1 ? '退款':'退货退款'}}</view>
 			</view>
-
-			<view class="flex margin-top-sm padding-lr-sm">
-				<view>
-					<image mode="aspectFill" style="height: 150rpx;width: 150rpx;" :src="item.goods_cover">
-					</image>
-				</view>
-				<view class="flex flex-direction">
-					<view class="padding-tb-xs padding-lr-sm u-line-2 text-sm" style="max-height: 78rpx;">
-						{{item.goods_name}} {{item.goods_spec_alias}}
+			<view>
+				<view class="flex margin-top-sm padding-lr-sm" v-for="(v,k) in item.goods" :key="v.id">
+					<view>
+						<image mode="aspectFill" style="height: 150rpx;width: 150rpx;" :src="v.goods_cover">
+						</image>
 					</view>
-					<view class="padding-tb-sm padding-lr-sm flex justify-between align-center">
-						<view class="text-sm">申请数量：<text style="color:#82848a;">{{item.refund_number}}</text></view>
-						<view class="text-sm text-red" v-if="item.step_status == 10">已退款：￥{{item.real_refund_amount}}</view>
+					<view class="flex flex-direction" style="height: 150rpx;">
+						<view class="padding-tb-xs padding-lr-sm u-line-2 text-sm" style="max-height: 76rpx;">
+							{{v.goods_name}} {{v.goods_spec_alias}}
+						</view>
+						<view class="padding-tb-sm padding-lr-sm flex justify-between align-center">
+							<view class="text-sm">数量：<text style="color:#82848a;">{{item.type == 2 ? item.refund_number : v.stock_sales}}</text></view>
+							<view class="text-sm text-red" v-if="item.type == 2 && item.step_status == 10">已退款：￥{{item.real_refund_amount}}</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -115,13 +129,13 @@
 				<view style="background-color: #f8f8f8;"
 					class="flex padding-tb padding-lr-sm align-center radius-xs text-sm"
 					@click="$globalJump2View('/pages/my/refund_order_detail/refund_order_detail?id='+item.id, true)">
-					<view class="margin-right-xl">{{item.step_status_label}}</view>
+					<view class="margin-right-xl" style="min-width: 16%;">{{item.step_status_label}}</view>
 					<view style="color:#82848a;">{{item.logs_content}}</view>
 					<view style="margin-left: auto;"><uni-icons type="forward" size="14" color="#82848a"></uni-icons>
 					</view>
 				</view>
 			</view>
-
+			
 		</view>
 		<view>
 			<block v-if="status == 'nomore' && list.length < 1">
@@ -241,8 +255,13 @@
 			if (options.value) {
 				this.value = options.value
 			}
+			if(options.active){
+				this.active = Number(options.active)
+			}
+		},
+		onShow(){
 			checkLogin(() => {
-				this.loadData()
+				this.resetList()
 			})
 		},
 		onReachBottom() {

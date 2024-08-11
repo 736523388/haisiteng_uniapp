@@ -46,7 +46,6 @@
 	@import "@/uni_modules/uview-ui/index.scss";
 	@import "@/static/style/stylesheet.css";
 	@import "@/static/colorui/main.css";
-	// @import "@/static/colorui/icon.css";
 
 	page {
 		font-family: Source_Han_Sans_SC_Normal,
@@ -61,9 +60,11 @@
 		font-size: 28rpx;
 		background-color: $u-bg-color;
 		box-sizing: border-box;
-		// width: 750rpx;
-		// margin: 0 auto;
 	}
+	
+	// uni-page-body,html,body {
+	// 	height: 100%;
+	// }
 
 
 	.container {
@@ -104,11 +105,11 @@
 	}
 	
 	.pos-re{
-		position:relative;
+		position: relative;
 	}
 	
 	.uni-input-placeholder,.uni-textarea-placeholder{
-		color: rgb(128,128,128) !important;
+		color: #808080 !important;
 		font-size: 28rpx !important;
 	}
 	.uni-input-input,.uni-textarea-textarea{

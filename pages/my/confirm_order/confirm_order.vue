@@ -8,7 +8,7 @@
 				<view style="flex: 1;">
 					<view class="flex align-center">
 						<uni-tag v-if="address_current.is_default == 1" text="默认" size="mini"
-							custom-style="background-color: #f43f5e; border-color: #f43f5e; color: #fff;margin-right: 6rpx;"></uni-tag>
+							custom-style="background-color: #e43d33; border-color: #e43d33; color: #fff;margin-right: 6rpx;"></uni-tag>
 						<view class="text-sm">
 							{{address_current.province}}{{address_current.city != '县' && address_current.city != '市' ? address_current.city : ''}}{{address_current.area}}
 						</view>
@@ -39,11 +39,14 @@
 					<image style="width: 200rpx;height: 200rpx;border-radius: 20rpx;" mode="aspectFill"
 						:src='item.goods_cover'></image>
 					<view class="margin-left" style="width: 470rpx;">
-						<view class="text-lg">{{item.goods_name}}</view>
-						<view class="text-desc text-sm">{{item.goods_spec_alias}}</view>
+						<view class=""><text v-if="item.activity_title != null" class="text-white margin-right-xs"
+								style="background-color: #e43d33;border:1px solid #e43d33;padding: 1px 3px;border-radius: 2px;font-size: 12px;
+">{{item.activity_title}}</text>{{item.goods_name}}</view>
+						<view class="text-gray text-sm">{{item.goods_spec_alias}}</view>
 						<view class="margin-top">
-							<text class="text-xs">￥<text class="text-lg">{{item.price_selling}}</text></text>
-							<text style="margin-left: 6rpx;"> x {{item.stock_sales}}</text>
+							<text v-if="item.price_selling != item.price_real" class="text-xs text-gray" style="text-decoration: line-through;"><text class="text-sm">￥{{item.price_selling}}</text></text>
+							<text class="text-xs">￥<text class="text-df">{{item.price_real}}</text></text>
+							<text class="margin-left-xs"> x {{item.stock_sales}}</text>
 						</view>
 					</view>
 				</view>
@@ -51,7 +54,29 @@
 			<view class="bg-white container padding-xs margin-bottom-sm" style="border-radius: 12rpx;">
 				<u-cell-group :border="false">
 					<u-cell title="商品总额" :border="false" :value="'￥'+total.amount_goods"></u-cell>
-					<u-cell :border="false" title="运费" :value="'￥' + total.express_amount " />
+					<u-cell v-if="total.activity_discount_amount_total != '0.00'" title="活动优惠" :border="false">
+						<template slot="value">
+							<view class="text-df text-red">-￥{{total.activity_discount_amount_total}}</view>
+						</template>
+						<template slot="right-icon">
+							<view class="text-df" @click.native.stop="show_activity_discount=!show_activity_discount">
+								<u-icon :name="show_activity_discount ? 'arrow-up':'arrow-down'"></u-icon>
+							</view>
+						</template>
+					</u-cell>
+					<view v-if="show_activity_discount">
+						<u-cell v-for="item in goods_list" v-if="item.activity_discount_amount_total != '0.00'" :border="false">
+							<template slot="title">
+								<view class="text-sm">{{item.goods_name}}</view>
+							</template>
+							<template slot="value">
+								<view class="text-df text-red">-￥{{item.activity_discount_amount_total}}</view>
+							</template>
+						</u-cell>
+					</view>
+					
+					<u-cell :border="false" title="运费"
+						:value="total.express_amount == '0.00' ? '包邮':'￥' + total.express_amount " />
 					<u-cell :border="false" title="优惠券">
 						<template slot="value">
 							<view v-if="coupon.used.id" class="text-df" style="line-height: 24px;">
@@ -87,6 +112,27 @@
 					</u-cell>
 					<view style="text-align: right;padding: 20rpx 30rpx;">合计：<text
 							class="text-red">￥{{total.amount_real}}</text></view>
+				</u-cell-group>
+			</view>
+			<view class="bg-white container padding-xs margin-bottom-sm" style="border-radius: 12rpx;">
+				<u-cell-group :border="false">
+					<u-cell :border="false" title="发票">
+						<template slot="value">
+							<view v-if="invoiceSet" class="text-df" style="line-height: 24px;"
+								@click.native.stop="openInvoicePopup">
+								<text>电子({{invoice.content_type == 1 ?'商品明细':'商品类别'}}-{{invoice.type == 1 ? '个人':'企业'}})</text>
+							</view>
+							<view v-else class="text-df" style="line-height: 24px;"
+								@click.native.stop="openInvoicePopup">
+								<text class="text-gray">不需要发票</text>
+							</view>
+						</template>
+						<template slot="right-icon">
+							<view class="text-df" @click.native.stop="openInvoicePopup">
+								<u-icon name="arrow-right"></u-icon>
+							</view>
+						</template>
+					</u-cell>
 				</u-cell-group>
 			</view>
 			<view class="bg-white"
@@ -143,7 +189,8 @@
 															<u-icon name="arrow-down-fill" size="10rpx"></u-icon>
 														</view>
 													</view>
-													<view><u-button type="primary" shape="circle" plain text="立即使用" size="mini"
+													<view><u-button type="primary" shape="circle" plain text="立即使用"
+															size="mini"
 															@click.native.stop="onCouponUse(item.id)"></u-button></view>
 												</view>
 											</template>
@@ -196,6 +243,52 @@
 			</view>
 
 		</uni-popup>
+		<uni-popup ref="invoice_ref" type="bottom" background-color="#f8f8f8" borderRadius="10px 10px 0 0">
+			<view class="container padding-tb invoice-box flex flex-direction justify-between"
+				style="position: relative;">
+				<view>
+					<view class="padding-tb-sm text-lg">发票抬头</view>
+					<view class="">
+						<view style="display: inline-block;">
+							<u-button @click="invoice.type=1" size="small" type="primary"
+								:plain="invoice.type ==2">个人</u-button>
+						</view>
+						<view style="display: inline-block;margin-left:20rpx;">
+							<u-button @click="invoice.type=2" size="small" type="primary"
+								:plain="invoice.type ==1">单位</u-button>
+						</view>
+					</view>
+					<view class="flex align-center padding-top-sm padding-bottom-xs" style="width: 650rpx;">
+						<view style="width: 180rpx;">{{invoice.type==1 ? '个人名称':'单位名称'}}</view>
+						<view style="flex-grow: 1;"><input name="name" v-model="invoice.name"
+								:placeholder="'请填写' + (invoice.type==1 ? '您的姓名' : '单位名称')" /></view>
+					</view>
+					<view v-if="invoice.type==2" class="flex align-center padding-top-xs padding-bottom-xs"
+						style="width: 650rpx;">
+						<view style="width: 180rpx;">纳税人识别号</view>
+						<view style="flex-grow: 1;"><input name="licence_no" v-model="invoice.licence_no"
+								placeholder="请填写纳税人识别码" /></view>
+					</view>
+					<view class="padding-tb-sm text-lg">发票内容</view>
+					<view class="">
+						<view style="display: inline-block;">
+							<u-button @click="invoice.content_type=1" size="small" type="primary"
+								:plain="invoice.content_type ==2">商品明细</u-button>
+						</view>
+						<view style="display: inline-block;margin-left:20rpx;">
+							<u-button @click="invoice.content_type=2" size="small" type="primary"
+								:plain="invoice.content_type ==1">商品类别</u-button>
+						</view>
+					</view>
+					<view class="padding-tb-sm text-sm">
+						{{invoice.content_type == 1 ? '发票内容将显示详细商品名称与价格信息' : '发票内容将显示商品所属类别及价格信息'}}，发票金额为实际支付金额，不含优惠扣减金额。
+					</view>
+				</view>
+				<view>
+					<u-button type="error" shape="circle" text="确定" @click.native="confirmInvoice"></u-button>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -211,6 +304,7 @@
 	export default {
 		data() {
 			return {
+				show_activity_discount: false,
 				from_cart: '0',
 				current: 0,
 				// 购物车传过来的数据
@@ -241,6 +335,13 @@
 				coupon_available_opens: [],
 				coupon_unavailable_opens: [],
 				// couponTabsLabel: ['可用（0）', '不可用（0）']
+				invoiceSet: false,
+				invoice: {
+					type: 1,
+					name: "",
+					licence_no: "",
+					content_type: 1
+				}
 			};
 		},
 		computed: {
@@ -267,23 +368,60 @@
 			// console.log(this.address_current_id)
 		},
 		onShow() {
-			checkLogin(() => {
-				this.loadData()
-				axios.get('/api/v1/user/info').then(res => {
-					if (res.code === 1) {
-						this.integral_available = res.data.integral_available
+			checkLogin(async () => {
+				try {
+					const ref1 = await axios.get('/api/v1/user/info')
+					if (ref1.code === 1) {
+						this.integral_available = ref1.data.integral_available
 					}
-				})
-				axios.get('/api/v1/user/address').then(res => {
-					if (res.code === 1) {
+					const ref2 = await axios.get('/api/v1/user/address')
+					if (ref2.code === 1) {
 						this.$store.commit('user_address/update_user_address_list', {
-							address_list: res.data.list
+							address_list: ref2.data.list
 						})
 					}
-				})
+					const ref3 = await axios.get('/api/v1/user/invoice')
+					if (ref3.code === 1 && ref3.data.type) {
+						this.invoiceSet = true
+						this.invoice.type = ref3.data.type
+						this.invoice.content_type = ref3.data.content_type
+						this.invoice.name = ref3.data.name
+						this.invoice.licence_no = ref3.data.licence_no
+						console.log(this.invoice)
+					}
+				} catch (error) {
+					console.log(error)
+				}
+				this.loadData()
+
 			})
 		},
 		methods: {
+			confirmInvoice() {
+				console.log(this.invoice)
+				if (this.invoice.name == '') {
+					uni.showToast({
+						title: '请输入' + (this.invoice.type == 1 ? '您的姓名' : '单位名称'),
+						icon: 'none',
+						duration: 1200
+					})
+					return
+				}
+
+				if (this.invoice.type == 2 && this.invoice.licence_no == '') {
+					uni.showToast({
+						title: '请输入纳税人识别号',
+						icon: 'none',
+						duration: 1200
+					})
+					return
+				}
+				this.invoiceSet = true
+				this.$refs.invoice_ref.close()
+			},
+			openInvoicePopup() {
+				this.$refs.invoice_ref.open()
+			},
 			openCouponPopup() {
 				this.$refs.coupon_ref.open()
 			},
@@ -320,6 +458,25 @@
 				}
 				this.orderLoading = true
 				let params = this.createParams()
+				if (this.invoiceSet) {
+					params.need_invoice = 1
+					params.invoice_type = this.invoice.type
+					params.invoice_content_type = this.invoice.content_type
+					params.invoice_name = this.invoice.name
+					params.licence_no = this.invoice.licence_no
+
+					if (params.invoice_type == 2 && params.licence_no == "") {
+						uni.showToast({
+							title: '请补充纳税人识别号',
+							icon: 'none'
+						})
+						this.openInvoicePopup()
+						this.orderLoading = false
+						return false
+					}
+				}
+				// 创建订单时传递渠道码
+				params.spread_channel = uni.getStorageSync('channel') || ''
 				axios.post('/api/v1/user/order/create', params).then(async (res) => {
 					if (res.code === 1) {
 						axios.get('/api/v1/user/goods/cart_num').then(res => {
@@ -385,44 +542,45 @@
 				params.from_cart = this.from_cart
 				return params
 			},
-			loadData() {
+			async loadData() {
 				let params = this.createParams()
-				axios.post("/api/v1/user/order/confirm", params).then(res => {
-					if (res.code === 1) {
-						let {
-							items,
-							express,
-							coupon,
-							total
-						} = res.data
-						this.total = Object.assign({}, this.total, total)
-						this.goods_list = items
-						this.coupon = coupon
-						// this.couponTabsLabel[0] = '可用（' + coupon.available.length + '）'
-						// this.couponTabsLabel[1] = '不可用（' + coupon.unavailable.length + '）'
-						this.loaded = true
-						if (res.data.items.length === 1 && res.data.items[0].integral_limit !== '0.00') {
-							this.use_available = true
-						}
-
-						console.log(this.coupon)
-						// setTimeout(() => {
-						// 	this.$refs.coupon_ref.open()
-						// }, 1500)
+				try {
+					const res = await axios.post("/api/v1/user/order/confirm", params)
+					if (res.code !== 1) {
+						throw new Error(res.info)
 					}
-				}).catch(error => {
-					console.log(error)
+					let {
+						items,
+						express,
+						coupon,
+						total
+					} = res.data
+					this.total = Object.assign({}, this.total, total)
+					this.goods_list = items
+					this.coupon = coupon
+					// this.couponTabsLabel[0] = '可用（' + coupon.available.length + '）'
+					// this.couponTabsLabel[1] = '不可用（' + coupon.unavailable.length + '）'
+					this.loaded = true
+					if (res.data.items.length === 1 && res.data.items[0].integral_limit !== '0.00') {
+						this.use_available = true
+					}
+				} catch (error) {
 					uni.showToast({
 						title: '出错了，请稍后重试！',
 						icon: 'none',
 						duration: 1200
 					})
-				})
+					// setTimeout(() => {
+					// 	uni.navigateBack()
+					// }, 1200)
+				}
 			},
 		}
 	}
 </script>
 
 <style lang="scss">
-
+	.invoice-box {
+		height: 65vh;
+	}
 </style>

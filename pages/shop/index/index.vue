@@ -15,7 +15,7 @@
 							bindenterpictureinpicture='bindVideoEnterPictureInPicture'
 							bindleavepictureinpicture='bindVideoLeavePictureInPicture'></video>
 					</view>
-					<view class="text-lg">{{ item.name }}</view>
+					<view class="text-lg align-center flex flex-wrap"><uni-tag v-if="item.activity_title != null" :text="item.activity_title" size="mini" type="error"></uni-tag><view class="margin-left-xs">{{ item.name }}</view></view>
 					<view class="text-desc">{{ item.remark }}</view>
 					<view style="display: flex;justify-content: flex-end;align-items: center;margin-top: 30rpx;">
 						<view style="margin-right: 12rpx;"><text class="text-sm">￥</text><text

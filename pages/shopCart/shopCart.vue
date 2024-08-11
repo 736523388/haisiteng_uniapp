@@ -1,5 +1,5 @@
 <template>
-	<view style="height: 100%;background-color: #fff;">
+	<view class="main bg-white">
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="is_login && loaded && (carts.length > 0 || invalid.length > 0)">
 			<view class="flex justify-between align-center bg-white margin-bottom-sm padding-sm">
@@ -400,21 +400,12 @@
 </script>
 
 <style lang="scss" scoped>
-	// page {
-	// 	position: absolute;
-	// 	top: 0;
-	// 	right: 0;
-	// 	left: 0;
-	// 	bottom: 0;
-	// }
-	// page {
-	// 	height: calc(100% - 44px - 50px);
-	// }
-	.main {
-		background-color: #fff;
+	page {
 		height: 100%;
 	}
-
+	.main{
+		height: 100%;
+	}
 	.cart-footer-t {
 		// height: calc(env(safe-area-inset-bottom) + 98rpx);
 		// height: calc(var(--window-bottom) + 98rpx);

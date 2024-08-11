@@ -11,7 +11,7 @@
 					</view>
 					<view class="order-status-desc">{{order_status_desac_arr[order_desc.status] || ''}}</view>
 				</view>
-				<view class="express" v-if="order_desc.status && order_desc.status > 2">
+				<view class="express" v-if="order_desc.status && order_desc.status > 4">
 					<view class="order-card">
 						<view class="order-card-icon">
 							<u-icon name="car-fill" />
@@ -19,8 +19,8 @@
 						<view>
 							<view style="padding-bottom: 10rpx;">物流快递：{{order_desc.truck.company_name}}</view>
 							<view>快递单号：{{order_desc.truck.send_number}}
-								<view style="display: inline-block;"><u-tag @click="copy" type="warning" plain
-										shape="circle" color="#9CA3AF" text="复制"></u-tag></view>
+								<view v-if="order_desc.truck.send_number" style="display: inline-block;"><u-tag @click="copy" type="warning" plain
+										shape="circle" size="mini" color="#9CA3AF" text="复制"></u-tag></view>
 
 							</view>
 						</view>
@@ -64,55 +64,50 @@
 			</view>
 			<view style="background-color: #fff;margin-top: 20rpx;">
 				<u-cell-group>
-					<u-cell>
+					<u-cell :border="false">
 						<view slot="title">
 							<text>订单编号：{{order_desc.order_no}}</text>
-							<view style="display: inline-block;"><u-tag @click="copyOrderNo" type="warning" plain
-									shape="circle" color="#9CA3AF" text="复制"></u-tag></view>
+							<view class="margin-left-xs" style="display: inline-block;"><u-tag @click="copyOrderNo" type="warning" plain
+									shape="circle" size="mini" color="#9CA3AF" text="复制"></u-tag></view>
 						</view>
 					</u-cell>
-					<u-cell :title="'下单时间：' + order_desc.create_at" />
-					<u-cell title="配送方式：普通快递"></u-cell>
-					<u-cell :title="'留    言：' + (order_desc.order_remark || '无')"></u-cell>
+					<u-cell :border="false" :title="'下单时间：' + order_desc.create_at" />
+					<u-cell :border="false" title="配送方式：普通快递"></u-cell>
+					<u-cell :border="false" :title="'留    言：' + (order_desc.order_remark || '无')"></u-cell>
 				</u-cell-group>
 			</view>
 			<view class="end_box" style="background-color: #fff;margin-top: 20rpx;">
 				<u-cell-group>
-					<u-cell title="商品总额" :value="'¥ '+order_desc.amount_goods"></u-cell>
-					<u-cell title="运费" :value="'+ ¥ '+order_desc.amount_express"></u-cell>
-					<u-cell title="需付款：" :value="'¥ '+order_desc.amount_total"></u-cell>
+					<u-cell :border="false" title="商品总额" :value="'¥ '+order_desc.amount_goods"></u-cell>
+					<u-cell :border="false" title="运费" :value="'+ ¥ '+order_desc.amount_express"></u-cell>
+					<u-cell :border="false" title="需付款：" :value="'¥ '+order_desc.amount_total"></u-cell>
 				</u-cell-group>
 			</view>
-			<view class="action-fiexd van-hairline--top">
-				<view v-if="order_desc.status === 0"
-					style="border-radius:10rpx;margin-left:20rpx;display: inline-block;">
+			<view class="action-fiexd">
+				<view class="margin-right-sm" v-if="order_desc.status === 0"
+					style="display: inline-block;">
 					<u-button type="error" size="small" :data-order_no="order_desc.order_no" @click.native.stop="remove"
-						text="删除"></u-button>
+						text="删除" plain shape="circle"></u-button>
 				</view>
-				<view v-if="order_desc.status === 1 || order_desc.status === 2 || order_desc.status === 3"
-					style="border-radius:10rpx;margin-left:20rpx;display: inline-block;">
-					<u-button size="small" :data-order_no="order_desc.order_no" @click.native.stop="cancel"
-						text="取消订单"></u-button>
+				<view class="margin-right-sm" v-if="order_desc.status === 1 || order_desc.status === 2 || order_desc.status === 3"
+					style="display: inline-block;">
+					<u-button type="info" size="small" :data-order_no="order_desc.order_no" @click.native.stop="cancel"
+						text="取消订单" shape="circle"></u-button>
 				</view>
-				<view v-if="order_desc.status === 2"
-					style="border-radius:10rpx;margin-left:20rpx;display: inline-block;">
-					<u-button type="success" size="small" :data-order_no="order_desc.order_no" @click.native.stop="pay"
-						text="付款"></u-button>
+				<view class="margin-right-sm" v-if="order_desc.status === 2"
+					style="display: inline-block;">
+					<u-button type="primary" size="small" :data-order_no="order_desc.order_no" @click.native.stop="pay"
+						text="付款" shape="circle"></u-button>
 				</view>
-				<view v-if="order_desc.status === 5"
-					style="border-radius:10rpx;margin-left:20rpx;display: inline-block;">
+				<view class="margin-right-sm" v-if="order_desc.status === 5"
+					style="display: inline-block;">
 					<u-button type="primary" size="small" :data-order_no="order_desc.order_no"
 						@click.native.stop="receive" text="确认收货"></u-button>
 				</view>
-				<view v-if="order_desc.status > 4" style="border-radius:10rpx;margin-left:20rpx;display: inline-block;">
-					<u-button size="small" :data-code="order_desc.truck.company_code"
-						:data-number="order_desc.truck.send_number" @click.native.stop="skip_logistic"
-						text="查看物流"></u-button>
-				</view>
-				<view v-if="order_desc.status === 6"
-					style="border-radius:10rpx;margin-left:20rpx;width: 130rpx;display: inline-block;">
-					<u-button size="small" :data-order_no="order_desc.order_no" @click.native.stop="appraise"
-						text="去评价"></u-button>
+				<view class="margin-right-sm" v-if="order_desc.status > 4" style="display: inline-block;">
+					<u-button
+						@click.native.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+order_desc.order_no)"
+						size="small" text="查看物流" plain shape="circle"></u-button>
 				</view>
 			</view>
 		</view>
@@ -284,17 +279,6 @@
 					uni.hideLoading()
 				})
 			},
-			// 跳转到物流页面
-			skip_logistic: function(e) {
-				console.log(e)
-				const {
-					code,
-					number
-				} = e.currentTarget.dataset
-				uni.navigateTo({
-					url: `/pages/my/logistics/logistics?code=${code}&number=${number}`,
-				})
-			},
 			// 评价
 			appraise: function(e) {
 				const {
@@ -318,18 +302,18 @@
 				})
 			},
 			copyOrderNo() {
-			    var that = this;
-			    uni.setClipboardData({
-			      data: that.order_desc.order_no,
-			      success: function (res) {
-			        uni.showToast({
-			          title: '复制成功',
-			          icon: 'none',
-			          duration: 2000,
-			        })
-			      }
-			    })
-			  },
+				var that = this;
+				uni.setClipboardData({
+					data: that.order_desc.order_no,
+					success: function(res) {
+						uni.showToast({
+							title: '复制成功',
+							icon: 'none',
+							duration: 2000,
+						})
+					}
+				})
+			},
 		}
 	}
 </script>

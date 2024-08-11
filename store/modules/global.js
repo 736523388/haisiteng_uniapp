@@ -9,6 +9,7 @@ export default {
 		page_decoration: [],
 		site_copy: "©版权所有 2019-2024 forska",
 		index_banner: [],
+		shop_index_background: "https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png"
 	}),
 	mutations: {
 		update_banner(state, {
@@ -24,6 +25,7 @@ export default {
 			state.page_decoration = data.page_decoration;
 			state.site_copy = data.site_copy
 			state.beds_type_list = data.beds_type_list
+			state.shop_index_background = data.shop_index_background || 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png'
 		}
 	}
 }

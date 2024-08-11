@@ -18,8 +18,8 @@
 						</view>
 						<view class="flex flex-direction text-right">
 							<view class="text-sm">{{value.statusTxt}}</view>
-							<!-- <view class="text-xs" v-if="value.status === 2 && value.await_pay_time > 0">
-								剩余时间{{value.await_pay_time}}分钟</view> -->
+							<view class="text-xs" v-if="value.status === 2 && value.await_pay_time > 0">
+								剩余{{value.await_pay_time}}分钟</view>
 						</view>
 					</view>
 					<!-- <u-line margin="20rpx 0"></u-line> -->
@@ -47,8 +47,8 @@
 						<text class="text-sm margin-left-xs">共{{value.number_goods}}件</text>
 
 					</view>
-					<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center">
-						<view v-if="value.status === 0" class="margin-left-sm">
+					<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center" @click.stop>
+						<view v-if="value.status === 0 && value.r_count < 1" class="margin-left-sm">
 							<u-button type="primary" @click.native.stop="remove" text="删除订单"
 								:data-order_no="value.order_no" size="small" plain shape="circle"></u-button>
 						</view>
@@ -57,29 +57,61 @@
 							<u-button type="info" text="取消订单" :data-order_no="value.order_no"
 								@click.native.stop="cancel" size="small" plain shape="circle"></u-button>
 						</view>
+						<view v-if="value.status === 6 && value.inv_status === 1" class="margin-left-sm">
+							<u-button type="info" text="查看发票" @click.native.stop="showInvoice(value.invoice_path)"
+								size="small" plain shape="circle"></u-button>
+						</view>
+						<view v-if="value.status === 6 && value.inv_status === 0" class="margin-left-sm">
+							<u-button type="info" text="发票开具中" :disabled="true" size="small" plain
+								shape="circle"></u-button>
+						</view>
+
+						<view v-if="value.status === 6 && value.inv_status === -1" class="margin-left-sm">
+							<u-button type="info" text="申请开票"
+								@click.native.stop="$globalJump2View('/pages/my/apply_invoice/apply_invoice?order_no='+value.order_no, true)"
+								size="small" plain shape="circle"></u-button>
+						</view>
+
 						<view v-if="value.status === 2" class="margin-left-sm">
 							<u-button type="primary" text="付款" :data-order_no="value.order_no" @click.native.stop="pay"
 								size="small" shape="circle"></u-button>
 						</view>
-						<view v-if="value.status === 4" class="margin-left-sm">
+						<view v-if="value.status === 4 && value.r_count < 1" class="margin-left-sm">
 							<u-button type="error" text="申请退款" :data-order_no="value.order_no"
-								@click.native.stop="$globalJump2View('/pages/my/refund_order/refund_order?value='+value.order_no, true)"
+								@click.native.stop="$globalJump2View('/pages/my/refund_order_apply/refund_order_apply?order_no='+value.order_no, true)"
 								size="small" plain shape="circle"></u-button>
 						</view>
-						<view v-if="value.status === 5" class="margin-left-sm">
+
+						
+						<view v-if="value.status > 4 && value.r_count < 1" class="margin-left-sm">
+							<u-button type="primary" text="查看物流"
+								@click.native.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+value.order_no, true)"
+								size="small" plain shape="circle"></u-button>
+						</view>
+						<view v-if="value.status === 5 && value.r_count < 1" class="margin-left-sm">
 							<u-button type="primary" text="确认收货" :data-order_no="value.order_no"
 								@click.native.stop="receive" size="small" shape="circle"></u-button>
 						</view>
-						<view v-if="value.status > 4" class="margin-left-sm">
-							<u-button type="primary" text="查看物流"
-								@click.native.stop="$globalJump2View('/pages/my/logistics/logistics?code='+value.truck.company_code +'&number='+value.truck.send_number, true)"
+						<view v-if="value.r_count > 0" class="margin-left-sm">
+							<u-button type="error" text="退款/售后" :data-order_no="value.order_no"
+								@click.native.stop="$globalJump2View('/pages/my/refund_order/refund_order?value='+value.order_no, true)"
 								size="small" plain shape="circle"></u-button>
 						</view>
-						<view v-if="value.status === 6" class="margin-left-sm">
+						<view v-if="value.status === 5 && value.r_count < 1" class="margin-left-sm">
+							<u-button type="error" text="退款/售后" :data-order_no="value.order_no"
+								@click.native.stop="$globalJump2View('/pages/my/choose_refund_type/choose_refund_type?order_no='+value.order_no, true)"
+								size="small" plain shape="circle"></u-button>
+						</view>
+
+
+						<view v-if="value.status === 6 && value.r_count < 1 && value.not_refund_timeout"
+							class="margin-left-sm">
 							<u-button type="error" text="申请售后" :data-order_no="value.order_no"
 								@click.native.stop="$globalJump2View('/pages/my/refund_order/refund_order?value='+value.order_no, true)"
 								size="small" plain shape="circle"></u-button>
 						</view>
+
+
 					</view>
 				</view>
 			</view>
@@ -92,6 +124,20 @@
 			<u-loadmore status="nomore" v-if="orderMenu[active].loaded === true && orderMenu[active].list.length > 0"
 				nomore-text="没有更多订单了~" />
 		</view>
+		<uni-popup ref="cancel_ref" type="bottom" background-color="#f8f8f8" borderRadius="10px 10px 0 0">
+			<view class="container padding-tb cancel-log-box flex flex-direction justify-between"
+				style="position: relative;">
+				<view>
+					<view class="padding-tb-sm text-lg">进度详情</view>
+					<view class="bg-white padding-sm radius-sm">
+						<uni-steps active-color="#000030" :options="list2" :active="cancel_active" direction="column" />
+					</view>
+				</view>
+				<!-- 				<view>
+					<u-button type="error" shape="circle" text="确定"></u-button>
+				</view> -->
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -102,6 +148,8 @@
 	export default {
 		data() {
 			return {
+				cancel_active: 0,
+				list2: [],
 				orderMenu: [{
 						label: '全部',
 						status: '',
@@ -153,12 +201,32 @@
 			}
 		},
 		onShow() {
+			this.orderMenu[this.active].list = []
+			this.orderMenu[this.active].page = 1
+			this.orderMenu[this.active].loading = false
+			this.orderMenu[this.active].loaded = false
 			this.loadData()
 		},
 		onReachBottom() {
 			this.loadData()
 		},
 		methods: {
+			showInvoice(invoice_path) {
+				uni.downloadFile({
+					url: invoice_path,
+					success: res => {
+						console.log(res)
+						// #ifndef H5
+						uni.openDocument({
+							filePath: res.tempFilePath,
+							fileType: 'pdf',
+							showMenu: true
+						})
+						// #endif
+
+					}
+				})
+			},
 			tabsChange(event) {
 				console.log(event)
 				this.active = event.index
@@ -349,9 +417,17 @@
 
 	}
 </script>
-
+<style>
+	/deep/.uni-steps__column-text {
+		border: none;
+	}
+</style>
 <style lang="scss" scoped>
 	page {
 		width: 750rpx;
+	}
+
+	.cancel-log-box {
+		min-height: 65vh;
 	}
 </style>

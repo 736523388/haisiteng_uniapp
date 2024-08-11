@@ -1,20 +1,20 @@
 <template>
 	<view>
 		<u-sticky bgColor="#fff">
-			<view class="text-white padding-tb-lg" style="background-color: #0B1839;text-align: center;">
+<!-- 			<view class="text-white padding-tb-lg" style="background-color: #0B1839;text-align: center;">
 				<view>账户积分</view>
 				<view style="font-size: 72rpx;">{{total}}<text style="font-size: 28rpx;">积分</text></view>
 				<navigator url="/pages/shop/goods_integral/goods_integral"
 					style="border: #fff 1rpx solid;display: inline-block;border-radius: 40rpx;padding: 4rpx 30rpx;">去使用
 				</navigator>
-			</view>
+			</view> -->
 			<u-tabs :current="active" keyName="label" @change="onChange" :scrollable="false" :list="menu_list"
 				lineColor="#000030">
 			</u-tabs>
 		</u-sticky>
 		<block v-for="(item,index) in menu_list" :key="index">
 			<view class="logs-box" v-if="index === active" v-for="(v, k) in item.list_re" :key="v.label">
-				<view class="logs-label">{{v.label}}</view>
+				<view class="logs-label text-grey margin-top-xs">{{v.label}}</view>
 				<view class="logs-list">
 					<view class="logs-items van-hairline--bottom" v-for="(integral, key) in v.list" :key="integral.id">
 						<text>{{integral.create_at_hi}}</text>
@@ -106,7 +106,8 @@
 				axios.get('/api/v1/user/integral', {
 					params: {
 						date: menu.date,
-						page: menu.page
+						page: menu.page,
+						limit: 20
 					}
 				}).then(res => {
 					if (res.code === 1) {
@@ -127,17 +128,12 @@
 								})
 							}
 						}
-						this.menu_list[this.active].page++;
-						this.menu_list[this.active].loaded = res.data.list.length < 10
+						this.menu_list[this.active].page++
+						this.menu_list[this.active].loaded = res.data.page.current >= res.data.page.pages
 						this.menu_list[this.active].list = this.menu_list[this.active].list.concat(res.data.list)
 						this.menu_list[this.active].list_re = list_re
 						this.total = res.data.total
 						console.log(this.menu_list)
-						if (menu.page === 2) {
-							setTimeout(() => {
-								this.loadData()
-							}, 100);
-						}
 					}
 					// console.log(this.menu_list)
 				}).finally(() => {
@@ -162,7 +158,7 @@
 	}
 
 	.logs-label {
-		color: #D1D5DB;
+		// color: #D1D5DB;
 		padding: 4rpx 20rpx;
 	}
 

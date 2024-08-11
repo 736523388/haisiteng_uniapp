@@ -2,7 +2,7 @@
 	<view class="bg-white">
 		<u-toast ref="uToast"></u-toast>
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
-		<view v-show="loaded">
+		<view v-if="loaded">
 			<!-- 轮播图 -->
 			<swiper class="screen-swiper square-dot" indicator-dots circular :autoplay="detail.video == ''"
 				interval="5000" duration="500" indicator-color="#6b7280" indicator-active-color="#374151">
@@ -17,14 +17,29 @@
 				</swiper-item>
 			</swiper>
 			<view class="bg-white padding-sm">
-				<view class="">{{detail.name}}</view>
 				<view>
-					<text class="text-xs">¥</text><text
-						class="text-xl text-bold">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
-					<text class="text-sm" v-show="!checkspec.id">起</text>
-					<text style="margin-left: 4rpx;"
-						v-show="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
-					
+					<!-- 					<view v-if="detail.activity_title != null" class="text-white"
+						style="background-color: #e43d33;flex: 1;">
+						{{detail.activity_title}}
+					</view> -->
+					<text v-if="detail.activity_title != null" class="text-white" style="background-color: #e43d33;border:1px solid #e43d33;padding: 1px 3px;border-radius: 2px;font-size: 12px;
+">{{detail.activity_title}}</text>
+					<text class="margin-left-xs">{{detail.name}}</text>
+				</view>
+				<view class="margin-top-xs flex align-center">
+					<view style="text-decoration: line-through;" v-if="detail.price_market != detail.price_selling">
+						<!-- <text class="text-sm" style="text-decoration: line-through;">¥</text> -->
+						<text
+							class="text-lg margin-left-xxs text-gray">¥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text>
+					</view>
+					<view class="margin-left-xs">
+						<text
+							class="text-lg margin-left-xxs text-red">¥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
+					</view>
+					<text class="text-sm margin-left-xxs" v-if="!checkspec.id">起</text>
+					<text class="margin-left-xxs"
+						v-if="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
+					<view class="text-sm margin-left-xxs"> / 件</view>
 				</view>
 
 				<!-- <view class="">{{checkspec.goods_spec_alias}}</view> -->
@@ -42,10 +57,10 @@
 				</button>
 			</view>
 			<view style="position: relative;width: 100rpx;padding: 10rpx 0;">
-				<button @click="gotoShopCart" class="u-reset-button custom-button" hover-class="bg-gray"><u-icon
+				<button @click.native="gotoShopCart" class="u-reset-button custom-button" hover-class="bg-gray"><u-icon
 						name="shopping-cart" size="52rpx" label="购物车" labelPos="bottom" labelSize="20rpx"
 						space="0"></u-icon></button>
-				<u-badge numberType="ellipsis" :max="99" bgColor="#ff0000" type="error" :value="goods_cart_number"
+				<u-badge numberType="ellipsis" :max="99" bgColor="#fa3534" type="error" :value="goods_cart_number"
 					:offset="[0,2]" absolute></u-badge>
 			</view>
 			<view style="flex: 1;padding: 10rpx;">
@@ -71,14 +86,17 @@
 					<view class="flex padding-right-xl margin-left-sm flex-direction justify-end"
 						style="height: 224rpx;">
 						<view style="margin-bottom: auto;">{{detail.name}}</view>
-						<view>
-							<text>¥</text>
-							<text
-								class="text-lg">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
-							<text class="text-sm" v-show="!checkspec.id">起</text>
-							<text style="margin-left: 4rpx;"
-								v-show="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
-							<text class="text-sm" style="margin-left: 6rpx;"> / 件</text>
+						<view class="flex align-center">
+							<view class="text-lg" style="text-decoration: line-through;">
+								¥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}
+							</view>
+							<view class="text-lg margin-left-xs text-red">
+								¥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}
+							</view>
+							<text class="text-sm margin-left-xxs" v-if="!checkspec.id">起</text>
+							<text class="margin-left-xxs"
+								v-if="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
+							<text class="text-sm margin-left-xxs"> / 件</text>
 
 
 						</view>
@@ -127,6 +145,8 @@
 	export default {
 		data() {
 			return {
+				aid: '',
+				channel: '',
 				loaded: false,
 				detail: {},
 				checkspec: {},
@@ -153,8 +173,32 @@
 			if (options.uid) {
 				uni.setStorageSync('pid', options.uid)
 			}
-			this.aid = options.id
-			this.loadData(options.id)
+			if (options.scene) {
+				const scene = decodeURIComponent(options.scene)
+				console.log(scene)
+				const scene_arr = scene.split('#')
+				console.log(scene_arr)
+				scene_arr.forEach(item => {
+					const scene_arr_2 = item.split('=')
+					if (scene_arr_2[0] == 'id') {
+						this.aid = scene_arr_2[1]
+					} else if (scene_arr_2[0] == 'channel') {
+						this.channel = scene_arr_2[1]
+						uni.setStorageSync('channel', this.channel)
+					}
+					this.loadData(this.aid)
+				})
+
+			} else {
+				this.channel = options.channel || ''
+				if (this.channel) {
+					uni.setStorageSync('channel', this.channel)
+				}
+				this.aid = options.id
+				this.loadData(options.id)
+			}
+
+
 		},
 		/**
 		 * 用户点击右上角分享
@@ -169,7 +213,7 @@
 			}
 		},
 		methods: {
-			showPreviewImage(index){
+			showPreviewImage(index) {
 				uni.previewImage({
 					current: index,
 					urls: this.detail.slider,
@@ -185,7 +229,7 @@
 					this.$refs.spec_popup.open()
 					return false
 				}
-				if(!this.checkspec.id){
+				if (!this.checkspec.id) {
 					uni.showToast({
 						title: '请选择商品规格',
 						icon: 'none'
@@ -256,6 +300,7 @@
 				})
 			},
 			goods_spec_alias(items) {
+				console.log(items)
 				let goods_spec_alias = [];
 				items.goods_spec.split(";;").map(item => {
 					goods_spec_alias.push(item.split("::")[1])
@@ -263,11 +308,11 @@
 				items.goods_spec_alias = goods_spec_alias.join(" ")
 				return items
 			},
-			checkIsElective(goods_spec){
+			checkIsElective(goods_spec) {
 				let is_elective = false
-				this.detail.items.forEach((v,vk) => {
+				this.detail.items.forEach((v, vk) => {
 					let onchecck = ';;' + v.goods_spec + ';;'
-					if (onchecck.indexOf(';;' + goods_spec+ ';;') > -1 && v.stock_total > v.stock_sales){
+					if (onchecck.indexOf(';;' + goods_spec + ';;') > -1 && v.stock_total > v.stock_sales) {
 						is_elective = true
 					}
 				})
@@ -279,14 +324,15 @@
 					if (res.code === 1) {
 						this.loaded = true
 						this.detail = res.data
-						
+
 						const specs = [...res.data.specs]
 						specs.forEach((v, vk) => {
-							this.checkSpecArr[vk]=""
+							this.checkSpecArr[vk] = ""
 							v.list.forEach((t, tk) => {
 								t = Object.assign(t, {
 									is_seleted: false,
-									is_elective: this.checkIsElective(v.name + '::' + t.name)
+									is_elective: this.checkIsElective(v.name + '::' + t
+										.name)
 								})
 							})
 						})
@@ -296,9 +342,15 @@
 				})
 			},
 			gotoShopCart() {
-				uni.navigateTo({
-					url: '/pages/shop_cart/shop_cart'
-				})
+				console.log('跳转到购物车')
+				let params = {url: '/pages/shopCart/shopCart', success: res => {console.log(res)},fail: err => {console.log(err)}}
+				console.log(params)
+				try {
+					uni.reLaunch(params)
+				} catch(error) {
+					console.log(error)
+				}
+				
 			},
 			onNumChange(event) {
 				console.log('当前值为: ' + event.value)
@@ -306,18 +358,18 @@
 			setSpecSeleted(e) {
 				this.specChanged(e.currentTarget.dataset.key1, e.currentTarget.dataset.key2)
 			},
-			checkIsElectiveFromSpecArr(specArr){
+			checkIsElectiveFromSpecArr(specArr) {
 				let is_elective = false
-				for(let v of this.detail.items){
+				for (let v of this.detail.items) {
 					let onchecck = ';;' + v.goods_spec + ';;'
 					let is = true
-					for(let t of specArr){
-						if(onchecck.indexOf(t) === -1){
+					for (let t of specArr) {
+						if (onchecck.indexOf(t) === -1) {
 							is = false
 							break
 						}
 					}
-					if(is !== false && v.stock_total > v.stock_sales){
+					if (is !== false && v.stock_total > v.stock_sales) {
 						is_elective = true
 						break
 					}
@@ -327,37 +379,37 @@
 			specChanged(i, j) {
 				let specs = this.detail.specs
 				let currentSpec = specs[i].list[j];
-				
+
 				//如果点击项不可点击 则打断不往下执行
 				if (currentSpec.is_elective === false) {
 					return false
 				}
 				console.log(currentSpec)
 				currentSpec.is_seleted = !currentSpec.is_seleted
-				
-				if(currentSpec.is_seleted === true) {
-					this.checkSpecArr[i] = currentSpec.group + '::'+currentSpec.name
+
+				if (currentSpec.is_seleted === true) {
+					this.checkSpecArr[i] = currentSpec.group + '::' + currentSpec.name
 				} else {
 					this.checkSpecArr[i] = ''
 				}
 				console.log(this.checkSpecArr)
-				specs[i].list.forEach((v,vk) => {
-					if(vk !== j){
+				specs[i].list.forEach((v, vk) => {
+					if (vk !== j) {
 						v.is_seleted = false
 					}
 				})
 				// 处理其他规格的是否可点击状态
-				specs.forEach((v,vk) => {
-					if(vk !== i || currentSpec.is_seleted === false){
-						v.list.forEach((t,tk) => {
-							if(t.is_seleted === false){
-								let specArr = [";;"+t.group+"::"+t.name+";;"]	
-								this.checkSpecArr.forEach((c,ck) => {
-									if(c !== "" && ck !== vk){
-										specArr.push(";;"+c+";;")
+				specs.forEach((v, vk) => {
+					if (vk !== i || currentSpec.is_seleted === false) {
+						v.list.forEach((t, tk) => {
+							if (t.is_seleted === false) {
+								let specArr = [";;" + t.group + "::" + t.name + ";;"]
+								this.checkSpecArr.forEach((c, ck) => {
+									if (c !== "" && ck !== vk) {
+										specArr.push(";;" + c + ";;")
 									}
 								})
-								console.log('specArr',specArr)
+								console.log('specArr', specArr)
 								t.is_elective = this.checkIsElectiveFromSpecArr(specArr)
 							}
 						})
@@ -367,13 +419,13 @@
 				specs[i].list[j] = currentSpec
 				this.detail.specs = [...specs]
 				let checked = true
-				for(let v of this.checkSpecArr){
-					if(v === ''){
+				for (let v of this.checkSpecArr) {
+					if (v === '') {
 						checked = false
 						break
 					}
 				}
-				if(checked){
+				if (checked) {
 					this.detail.items.forEach((specitem, specindex) => {
 						let is_check = true
 						this.checkSpecArr.forEach((checkitem, checkindex) => {

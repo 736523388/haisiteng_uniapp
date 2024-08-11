@@ -51,23 +51,24 @@
 		</block>
 		<!-- #endif -->
 		<!-- #ifndef MP-WEIXIN -->
-		<view style="width: 690rpx;margin: 0 auto;">
+		<view class="container">
 			<view class="padding-left margin-top-xxl text-xxl text-bold margin-tb-xl">手机快捷登录</view>
 			<u-input style="margin-top: 30rpx;" placeholder="请输入手机号" border="surround" v-model="phone">
 				<template slot="suffix">
 					<u-code ref="uCode" @change="codeChange" seconds="60" changeText="X秒重新获取"></u-code>
-					<u-button @click="sendSmsCode" :text="tips" type="primary" size="small"></u-button>
+					<button @click="sendSmsCode" type="default" size="mini"
+						style="color:#ffffff;background-color:#000030;border-color:#000030">{{tips}}</button>
 				</template>
 			</u-input>
 			<u-input style="margin-top: 30rpx;" placeholder="请输入验证码" border="surround" v-model="sms_code"></u-input>
 
-			<view style="width: 650rpx;margin: 0 auto;margin-top: 30rpx;">
-				<u-button v-if="!agree" type="primary" @click="showAgreeToast" custom-class="login-btn"
-					size="large">登录</u-button>
-				<u-button v-else type="primary" @click="dynamicLogin" custom-class="login-btn"
-					size="large">登录</u-button>
+			<view class="margin-top" style="width: 650rpx;margin: 0 auto;">
+				<button v-if="!agree" @click="showAgreeToast" type="default" class="login-btn"
+					style="color:#ffffff;background-color:#000030;border-color:#000030">登录</button>
+				<button v-else @click="dynamicLogin" type="default" class="login-btn"
+					style="color:#ffffff;background-color:#000030;border-color:#000030">登录</button>
 			</view>
-			<view style="font-size: 24rpx;text-align: center;margin: 20rpx auto;width: 630rpx;">
+			<view class="text-center" style="font-size: 24rpx;margin: 20rpx auto;width: 630rpx;">
 				<switch style="transform: scale(0.6,0.6);height: 36rpx;width: 36rpx;" type="checkbox" :checked="agree"
 					@change="switch2Change" /><text style="margin-left: 6rpx;">打勾表示您已阅读并同意以下协议</text>
 				<navigator style="display: inline-block;color: #1989fa;"
@@ -329,6 +330,11 @@
 <style lang="scss" scoped>
 	page {
 		background: #fff;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
 	}
 
 	.login-logo-box {

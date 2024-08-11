@@ -1,36 +1,30 @@
 <template>
 	<view>
-		<view class="header-box"
-			style="background-image: url('https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my_bg.jpg');background-size: cover;background-repeat: repeat;">
-			<!-- 		<u-image custom-class="background-image" width="750rpx" height="194rpx"
-			src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my_bg.jpg"></u-image> -->
-			<view class="title">物流信息</view>
-			<view class="express">
-				<view class="order-card">
-					<view class="order-card-icon">
-						<u-icon name="car-fill" />
-					</view>
-					<view>
-						<view style="padding-bottom: 10rpx;">物流快递：{{track_name}}</view>
-						<view>快递单号：{{number}}<uni-tag @click="copy" type="warning" inverted circle text="复制"></uni-tag>
+		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
+		<view v-if="loaded">
+			<view class="header-box"
+				style="background-image: url('https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my_bg.jpg');background-size: cover;background-repeat: repeat;">
+				<view class="title">物流信息</view>
+				<view class="express">
+					<view class="order-card">
+						<view class="order-card-icon">
+							<u-icon name="car-fill" />
+						</view>
+						<view>
+							<view class="padding-bottom-xs">物流快递：{{track_name}}</view>
+							<view class="flex align-center">快递单号：{{number}}
+								<view class="margin-left-xs"><uni-tag @click="copy" size="mini" type="warning" inverted
+										circle text="复制"></uni-tag></view>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<view class="container track-message" v-if="loaded === true && message.length > 0">
-			<u-steps current="0" direction="column" activeColor="#374151">
-				<u-steps-item :title="item.AcceptStation" :desc="item.AcceptTime" v-for="(item,index) in message"
-					:key="index">
-				</u-steps-item>
-			</u-steps>
-			<view style="height: 44px;"></view>
+			<view class="container track-message" v-if="loaded === true && message.length > 0">
+				<uni-steps :options="message" :active="0" direction="column" active-color="#000030"></uni-steps>
+			</view>
 		</view>
 
-		<view v-if="loaded === true && message.length === 0">
-			<u-empty text="暂无数据" icon="/static/empty_data.png">
-			</u-empty>
-		</view>
 
 	</view>
 </template>
@@ -42,6 +36,7 @@
 	export default {
 		data() {
 			return {
+				order_no: "",
 				code: "",
 				number: '',
 				track_name: '',
@@ -50,8 +45,9 @@
 			};
 		},
 		onLoad(options) {
-			this.code = options.code || ''
-			this.number = options.number || ''
+			// this.code = options.code || ''
+			// this.number = options.number || ''
+			this.order_no = options.order_no || ""
 			this.loadData()
 		},
 		methods: {
@@ -64,33 +60,50 @@
 						uni.showToast({
 							title: '复制成功',
 							icon: 'none',
-							duration: 2000,
+							duration: 1200,
 						})
 					}
 				})
 			},
 			loadData() {
-				uni.showLoading({
-					title: '加载中~'
-				})
-				axios.get('/api/v1/user/order/track', {
+				axios.get('/api/v1/user/order/logistics', {
 					params: {
-						code: this.code,
-						number: this.number
+						order_no: this.order_no
 					}
 				}).then(res => {
 					if (res.code === 1) {
-						this.message = res.data.Traces.reverse()
+						// this.message = res.data.data
 						this.track_name = res.data.track_name
+						this.number = res.data.track_number
+						this.message = res.data.data.map(item => {
+							return {
+								title: item.context,
+								desc: item.time
+							}
+						})
+						this.$nextTick(() => {
+							this.loaded = true
+						})
 					} else {
-						this.track_name = '获取失败'
+						uni.showToast({
+							title: "获取物流轨迹失败",
+							icon: 'none',
+							duration: 1200
+						})
+						setTimeout(() => {
+							uni.navigateBack()
+						}, 1200)
 					}
 
 				}).catch(error => {
-					this.track_name = '获取失败'
-				}).finally(() => {
-					wx.hideLoading()
-					this.loaded = true
+					uni.showToast({
+						title: "获取物流轨迹失败",
+						icon: 'none',
+						duration: 1200
+					})
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 1200)
 				})
 			}
 		}

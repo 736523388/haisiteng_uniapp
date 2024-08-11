@@ -18,7 +18,7 @@
 				<view class="text-ee">优惠券</view>
 				<view class="text-xs text-grey">{{is_login ? coupon_count:0}}张可用</view>
 			</view>
-			<view class="menu my-integ-border" @click="$globalJump2View('/pages/my/integral/integral', true)">
+			<view class="menu my-integ-border" @click="$globalJump2View('/pages/my/integral_home/integral_home', true)">
 				<view class="text-ee">积分</view>
 				<view class="text-xs text-grey">{{is_login ?integral_available:0}}</view>
 			</view>
@@ -49,18 +49,7 @@
 				</view>
 			</view>
 		</view>
-		<!-- <view class="bg-white padding-lr-sm margin-top">
-			<view class="padding-tb flex align-center" :class="{'u-border-top': index > 0}"
-				@click="$globalJump2View(item.path, true)" v-if="item.show === true && (is_login || !item.needLogin )" v-for="(item,index) in menu" :key="item.title">
-				<uni-icons type="gear" size="18"></uni-icons>
-				<view class="margin-left-xs">{{item.title}}</view>
-				<view class="flex align-center" style="position: relative;margin-left: auto;">
-					<view class="text-gray">待处理</view>
-					<uni-icons type="forward" size="16" color="#808080"></uni-icons>
-				</view>		
-			</view>
-		</view> -->
-		<view class="padding-top padding-bottom-xl bg-white margin-top">
+		<view class="padding-top padding-bottom-lg bg-white margin-top">
 			<block v-for="(item,index) in menu" :key="item.title">
 				<view @click="$globalJump2View(item.path, true)" :data-index="index"
 					v-if="item.show === true && (is_login || !item.needLogin )" class="flex align-center my_menu_item">
@@ -77,7 +66,6 @@
 				</view>
 			</block>
 		</view>
-		<custom-tabbar :currentIndex="2"></custom-tabbar>
 	</view>
 </template>
 
@@ -168,19 +156,19 @@
 						offset: [0, 0],
 						url: '/pages/my/my_order/my_order?status=3'
 					},
-					{
-						label: '待评价',
-						img: '/static/icon_rj5jpyh9xsb/comment.png',
-						value: 0,
-						offset: [0, 0],
-						url: '/pages/my/my_order/my_order?status=4'
-					},
+					// {
+					// 	label: '待评价',
+					// 	img: '/static/icon_rj5jpyh9xsb/comment.png',
+					// 	value: 0,
+					// 	offset: [0, 0],
+					// 	url: '/pages/my/my_order/my_order?status=4'
+					// },
 					{
 						label: '退款/售后',
 						img: '/static/icon_rj5jpyh9xsb/refund.png',
 						value: 0,
 						offset: [0, 6],
-						url: '/pages/my/refund_order/refund_order'
+						url: '/pages/my/refund_order/refund_order?active=1'
 					},
 				]
 			};
@@ -229,7 +217,7 @@
 					this.order_menu[0].value = res.data.t2
 					this.order_menu[1].value = res.data.t4
 					this.order_menu[2].value = res.data.t5
-					this.order_menu[4].value = res.data.refund
+					this.order_menu[3].value = res.data.refund
 				})
 				axios.get('/api/v1/admin/backlog').then(res => {
 					this.$set(this.menu[5], 'redHot', res.data.bed_service > 0 || res.data.intend_customers > 0)
@@ -246,13 +234,6 @@
 </script>
 
 <style lang="scss" scoped>
-	page {
-		background-color: #f8f8f8;
-	}
-
-	.page-body {
-		padding-bottom: calc(env(safe-area-inset-bottom) + 100rpx);
-	}
 
 	.my_head_bg_box {
 		position: absolute;

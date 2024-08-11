@@ -2,9 +2,7 @@
 	<view class="page-body">
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-show="loaded">
-			<view style="height: 450rpx;">
-				<u--image :src="top_hero" width="100%" height="450rpx" mode="center" />
-			</view>
+			<image :src="shop_index_background" mode="widthFix" style="width: 100%;"/>
 
 			<view style="width: 690rpx;height: 220rpx;margin: 20rpx auto;"
 				@click="$globalJump2View('/pages/shop/goods_integral/goods_integral')">
@@ -43,22 +41,38 @@
 	import {
 		axios
 	} from '@/utils/request'
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		data() {
 			return {
 				loaded: false,
-				top_hero: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png',
 				list: [],
 			};
 		},
+		computed: {
+			...mapState({
+				shop_index_background: state => state.global.shop_index_background
+			})
+		},
 		onLoad() {
 			this.loadData()
+		},
+		onShareAppMessage: function(options) {
+			return {
+				title: "My Hastens",
+				path: 'pages/shop/goods_index/goods_index'
+			}
 		},
 		methods: {
 			loadData() {
 				axios.get('/api/v1/cate_goods').then(res => {
 					this.list = res.data
-					this.loaded = true
+					this.$nextTick(() => {
+						this.loaded = true
+					})
+					
 				})
 			}
 		}

@@ -96,7 +96,8 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<custom-tabbar :currentIndex="0" @switchTab="switchTab"></custom-tabbar>
+		<!-- <custom-tabbar :currentIndex="0" @switchTab="switchTab"></custom-tabbar> -->
+		<!-- <custom-tab-bar direction="horizontal" :show-icon="true" :selected="0" @onTabItemTap="switchTab" /> -->
 	</view>
 
 </template>
@@ -220,7 +221,7 @@
 	.page-body {
 		background-color: #f8f8f8;
 		box-sizing: border-box;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 100rpx);
+		// padding-bottom: calc(env(safe-area-inset-bottom) + 100rpx);
 	}
 
 	/* 	.switch-tab {

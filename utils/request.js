@@ -1,14 +1,32 @@
 import store from '@/store/index.js'; //需要引入store
 import Request from 'luch-request'
-const BASE_URL = 'https://hst.test.cqclxsc.com'
-// const BASE_URL = 'http://127.0.0.1:8000'
+var BASE_URL = 'https://hst.test.cqclxsc.com'
+// var BASE_URL = 'http://127.0.0.1:8000'
+// #ifdef MP-WEIXIN
+const accountInfo = uni.getAccountInfoSync();
+console.log(accountInfo)
+if (accountInfo.miniProgram) {
+	const version = accountInfo.miniProgram.envVersion;
+	console.log(version)
+	if (version === 'release') {
+		// 正式版
+		console.log('正式版');
+		BASE_URL = 'https://hst.dev.cqclxsc.com'
+	} else if (version === 'trial') {
+		// 体验版
+		console.log('体验版');
+		BASE_URL = 'https://hst.test.cqclxsc.com'
+	}
+}
+// #endif
+console.log(BASE_URL)
 // 是否正在刷新状态
 let isRefreshing = false
 // 重试队列，每一项将是一个待执行的函数形式
 let requests = []
 
 const isLogin = (cb) => {
-	if(!store.getters['user/is_login']){
+	if (!store.getters['user/is_login']) {
 		uni.navigateTo({
 			url: '/pages/login/login'
 		})
@@ -105,7 +123,7 @@ instance.interceptors.response.use((response) => {
 	let {
 		code
 	} = response.data
-	if(code === 401){
+	if (code === 401) {
 		store.dispatch('user/abnormal_logout')
 		// return new Promise(() => {})
 	}

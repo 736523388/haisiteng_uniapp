@@ -439,11 +439,58 @@
 				"navigationBarTitleText" : "申请售后",
 				"enablePullDownRefresh" : false
 			}
+		},
+		{
+			"path" : "pages/my/choose_refund_type/choose_refund_type",
+			"style" : 
+			{
+				"navigationBarTitleText" : "选择售后类型",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/shopCart/shopCart",
+			"style" : 
+			{
+				"navigationBarTitleText" : "购物车",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/apply_invoice/apply_invoice",
+			"style" : 
+			{
+				"navigationBarTitleText" : "申请开票",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/integral_home/integral_home",
+			"style" : 
+			{
+				"navigationBarTitleText" : "积分中心",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/shop/gift_detail/gift_detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "礼品详情",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/shop/gift_confirm/gift_confirm",
+			"style" : 
+			{
+				"navigationBarTitleText" : "兑换礼品",
+				"enablePullDownRefresh" : false
+			}
 		}
 	],
-	// #ifdef MP-WEIXIN
 	"tabBar": {
-		"custom": true,
+		"custom": false,
 		"color": "#AFAFAF",
 		"selectedColor": "#000030",
 		"borderStyle": "white",
@@ -454,22 +501,22 @@
 				"iconPath": "/static/tabbar/home_o.png",
 				"selectedIconPath": "/static/tabbar/home.png"
 			},
-			// {
-			// 	"pagePath": "pages/shop_cart/shop_cart",
-			// 	"text": "购物袋",
-			// 	"iconPath": "/static/tabbar/cart_o.png",
-			// 	"selectedIconPath": "/static/tabbar/cart.png"
+			{
+				"pagePath": "pages/shopCart/shopCart",
+				"text": "购物袋",
+				"iconPath": "/static/tabbar/cart_o.png",
+				"selectedIconPath": "/static/tabbar/cart.png"
 
-			// },
+			},
 			{
 				"pagePath": "pages/my/my",
 				"text": "我的",
 				"iconPath": "/static/tabbar/my_o.png",
 				"selectedIconPath": "/static/tabbar/my.png"
 			}
-		]
+		],
+		"fontSize": "12px"
 	},
-	// #endif
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Hastens",

@@ -5,7 +5,7 @@
 			<view style="line-height: 1.5;">
 				<view class="flex align-center padding u-border-top" @click="show=true">
 					<view>退款原因：</view>
-					<view class="text-gray margin-left-sm">请先选择退款原因</view>
+					<view class="margin-left-sm" :class="{'text-gray': !clickFlag}">{{!clickFlag ? '请先选择退款原因' : radiovalue1}}</view>
 					<view style="margin-left: auto;"><u-icon size="24rpx" name="arrow-right" color="#333"></u-icon>
 					</view>
 				</view>
@@ -56,7 +56,7 @@
 	export default {
 		data() {
 			return {
-				order_item_id: '',
+				order_no: '',
 				show: false,
 				loaded: false,
 				reasons: [],
@@ -66,7 +66,7 @@
 			};
 		},
 		onLoad(options) {
-			this.order_item_id = options.id || ''
+			this.order_no = options.order_no || ''
 			axios.get('/api/v1/refund_order_reasons').then(res => {
 				if (res.code === 1) {
 					this.reasons = res.data.reasons_type1.map((item, index) => {
@@ -83,6 +83,7 @@
 			confirmReasons() {
 				this.clickFlag = true
 				this.show = false
+				console.log(this.radiovalue1)
 			},
 			radioChange(n) {
 				this.radiovalue1 = n
@@ -91,10 +92,9 @@
 				this.show = false
 			},
 			submit() {
-				console.log(this.radiovalue1, this.order_item_id)
-				axios.post('/api/v1/user/refund_order', {
-					order_item_id: this.order_item_id,
-					type: 1,
+				console.log(this.radiovalue1)
+				axios.post('/api/v1/user/order_cancel', {
+					order_no: this.order_no,
 					reason: this.radiovalue1
 				}).then(res => {
 					console.log(res)

@@ -43,7 +43,9 @@
             /* ios打包配置 */
             "ios" : {},
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "payment" : {}
+            }
         }
     },
     /* 快应用特有相关 */
@@ -61,7 +63,11 @@
         "usingComponents" : true
     },
     "mp-baidu" : {
-        "usingComponents" : true
+        "usingComponents" : true,
+        "appid" : "26705822",
+        "setting" : {
+            "urlCheck" : false
+        }
     },
     "mp-toutiao" : {
         "usingComponents" : true
