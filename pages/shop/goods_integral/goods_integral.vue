@@ -15,7 +15,7 @@
 						</view>
 					</view>
 					<view class="text-sm text-desc">
-						<text @click="$globalJump2View('/pages/agreement/agreement?name=points_rule')">积分规则</text>
+						<text @click="$globalJump2View('/pages/my/integral_home/integral_home')">积分中心</text>
 						<text style="margin: 0 6rpx;">|</text>
 						<text @click="$globalJump2View('/pages/my/integral/integral', true)">积分记录</text>
 					</view>

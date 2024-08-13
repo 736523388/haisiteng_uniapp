@@ -75,7 +75,7 @@
 			"path" : "pages/my/integral/integral",
 			"style" : 
 			{
-				"navigationBarTitleText" : "我的积分",
+				"navigationBarTitleText" : "积分记录",
 				"enablePullDownRefresh" : false
 			}
 		},
@@ -486,6 +486,13 @@
 			{
 				"navigationBarTitleText" : "兑换礼品",
 				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/integral_exchange_logs/integral_exchange_logs",
+			"style" : 
+			{
+				"navigationBarTitleText" : "积分兑换记录"
 			}
 		}
 	],

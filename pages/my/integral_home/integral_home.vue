@@ -8,6 +8,9 @@
 				<navigator url="/pages/my/integral/integral"
 					style="border: #fff 1rpx solid;display: inline-block;border-radius: 40rpx;padding: 4rpx 30rpx;">积分明细
 				</navigator>
+				<navigator url="/pages/my/integral_exchange_logs/integral_exchange_logs"
+					style="border: #fff 1rpx solid;display: inline-block;border-radius: 40rpx;padding: 4rpx 30rpx;margin-left: 10rpx;">兑换记录
+				</navigator>
 			</view>
 <!-- 			<view class="container-xl bg-white margin-top-sm padding-sm radius-sm">
 				<view>做任务 领积分</view>
