@@ -494,6 +494,14 @@
 			{
 				"navigationBarTitleText" : "积分兑换记录"
 			}
+		},
+		{
+			"path" : "pages/my/integral_exchange_logs_logistics/integral_exchange_logs_logistics",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
 		}
 	],
 	"tabBar": {
