@@ -245,7 +245,9 @@
 				axios.post("/api/v2/login", {
 					phone: this.phone,
 					code: this.sms_code,
-					pid: uni.getStorageSync('pid')
+					pid: uni.getStorageSync('pid'),
+					openid: uni.getStorageSync('openid'),
+					unionid: uni.getStorageSync('unionid'),
 				}).then(res => {
 					uni.hideLoading()
 					if (res.code == 1) {
@@ -286,7 +288,9 @@
 				})
 				axios.post('/api/v2/wx_login', {
 					code: e.detail.code,
-					pid: uni.getStorageSync('pid')
+					pid: uni.getStorageSync('pid'),
+					openid: uni.getStorageSync('openid'),
+					unionid: uni.getStorageSync('unionid'),
 				}).then(res => {
 					uni.hideLoading()
 					if (res.code == 1) {
@@ -323,6 +327,20 @@
 		},
 		onLoad() {
 			console.log('login.vue onLoad')
+			// #ifdef MP-WEIXIN
+			uni.login({
+				success: res => {
+					if(res.code){
+						axios.post('/api/v2/wx_pre_login', {code: res.code}).then(ref => {
+							if(ref.code === 1){
+								uni.setStorageSync("openid", ref.data.openid)
+								uni.setStorageSync("unionid", ref.data.unionid || "")
+							}
+						}).catch(error => {})
+					}
+				}
+			})
+			// #endif
 		}
 	}
 </script>
