@@ -21,7 +21,7 @@
 						<view><u-button @click.native="inputDialogToggle" type="error" size="mini" shape="circle" plain text="我已寄出"></u-button></view>
 					</view>
 					<view>
-						<view class="label">寄件信息</view><text>{{refundsend.name}} {{refundsend.phone}} </text>
+						<view class="label">寄件信息</view><text>{{refundsend.name}} {{refundsend.phone}} </text><view class="copy" @click="copyrefundsend">复制</view>
 					</view>
 					<view>
 						<view class="label"></view>
@@ -250,6 +250,19 @@
 					}
 				})
 			},
+			copyrefundsend(){
+				var that = this;
+				uni.setClipboardData({
+					data: that.refundsend.name + that.refundsend.phone,
+					success: function(res) {
+						uni.showToast({
+							title: '复制成功',
+							icon: 'none',
+							duration: 1200,
+						})
+					}
+				})
+			}
 		}
 	}
 </script>

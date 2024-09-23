@@ -15,9 +15,15 @@
 							bindenterpictureinpicture='bindVideoEnterPictureInPicture'
 							bindleavepictureinpicture='bindVideoLeavePictureInPicture'></video>
 					</view>
-					<view class="text-lg align-center flex flex-wrap"><uni-tag v-if="item.activity_title != null" :text="item.activity_title" size="mini" type="error"></uni-tag><view class="margin-left-xs">{{ item.name }}</view></view>
+					<view class="text-lg align-center flex flex-wrap">
+						<uni-tag v-if="item.activity_title != null" :text="item.activity_title" size="mini" type="error"></uni-tag>
+						<view class="margin-left-xs">{{ item.name }}</view>
+					</view>
 					<view class="text-desc">{{ item.remark }}</view>
 					<view style="display: flex;justify-content: flex-end;align-items: center;margin-top: 30rpx;">
+						<view v-if="item.show_market" style="margin-right: 12rpx;text-decoration: line-through;">
+							<text class="text-lg">￥{{ item.price_market }}</text>
+						</view> 
 						<view style="margin-right: 12rpx;"><text class="text-sm">￥</text><text
 								class="text-lg">{{ item.price_selling }}</text></view>
 						<navigator :url="'/pages/shop/goods_detail/goods_detail?id=' + item.id" class="text-df"

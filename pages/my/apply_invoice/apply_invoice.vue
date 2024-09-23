@@ -49,7 +49,7 @@
 
 <script>
 	import {
-		axios
+		axios, checkLogin
 	} from '@/utils/request'
 	export default {
 		data() {
@@ -63,6 +63,20 @@
 		},
 		onLoad(options) {
 			this.order_no = options.order_no || ''
+			checkLogin(async () => {
+				try {
+					const ref3 = await axios.get('/api/v1/user/invoice')
+					if (ref3.code === 1) {
+						this.type = ref3.data.type
+						this.content_type = ref3.data.content_type
+						this.name = ref3.data.name
+						this.licence_no = ref3.data.licence_no
+						console.log(this.data)
+					}
+				} catch (error) {
+					console.log(error)
+				}
+			})
 		},
 		methods: {
 			confirmInvoice(){

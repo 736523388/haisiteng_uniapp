@@ -5,7 +5,7 @@
 			<image :src="shop_index_background" mode="widthFix" style="width: 100%;"/>
 
 			<view style="width: 690rpx;height: 220rpx;margin: 20rpx auto;"
-				@click="$globalJump2View('/pages/shop/goods_integral/goods_integral')">
+				@click="$globalJump2View('/pages/shop/goods_integral/goods_integral', true)">
 				<u--image src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E5%95%86%E5%9F%8E2.jpg"
 					height="220rpx" width="100%" mode="aspectFit" />
 			</view>

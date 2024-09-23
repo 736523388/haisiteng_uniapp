@@ -382,7 +382,7 @@
 					}
 					const ref3 = await axios.get('/api/v1/user/invoice')
 					if (ref3.code === 1 && ref3.data.type) {
-						this.invoiceSet = true
+						// this.invoiceSet = true
 						this.invoice.type = ref3.data.type
 						this.invoice.content_type = ref3.data.content_type
 						this.invoice.name = ref3.data.name
@@ -518,7 +518,7 @@
 				setTimeout(() => {
 					this.orderLoading = false
 					if (golist) {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: '/pages/my/my_order/my_order',
 						})
 					}
