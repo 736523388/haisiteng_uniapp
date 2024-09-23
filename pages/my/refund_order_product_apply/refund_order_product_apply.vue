@@ -227,7 +227,7 @@
 					})
 					data_images = images.join('|')
 				}
-				uni.showLoaing()
+				uni.showLoading()
 				axios.post('/api/v1/user/refund_order', {
 					order_item_id: this.id,
 					reason: this.radiovalue1,
