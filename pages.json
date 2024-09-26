@@ -517,6 +517,12 @@
 				"selectedIconPath": "/static/tabbar/home.png"
 			},
 			{
+				"pagePath": "pages/shop/goods_index/goods_index",
+				"text": "商城",
+				"iconPath": "/static/tabbar/hui.png",
+				"selectedIconPath": "/static/tabbar/lan.png"
+			},
+			{
 				"pagePath": "pages/shopCart/shopCart",
 				"text": "购物袋",
 				"iconPath": "/static/tabbar/cart_o.png",

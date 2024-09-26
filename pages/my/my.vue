@@ -66,6 +66,7 @@
 				</view>
 			</block>
 		</view>
+		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
 	</view>
 </template>
 

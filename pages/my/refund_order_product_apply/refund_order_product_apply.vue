@@ -30,7 +30,7 @@
 				<view class="flex align-center padding-lr padding-bottom">
 					<view></view>
 					<view style="margin-left: auto;" class="flex align-center text-gray">
-						最多可输入商品金额￥{{return_amount_total}}
+						最多可输入商品金额￥{{order_item_amount_total}}
 					</view>
 				</view>
 			</view>
@@ -92,6 +92,7 @@
 		axios,
 		checkLogin
 	} from '@/utils/request.js'
+	import { Calc } from '@/utils/util';
 	const date = new Date();
 	date.setHours(date.getHours() + 1);
 	const policyText = {
@@ -125,7 +126,11 @@
 		},
 		computed: {
 			return_amount_total() {
-				return this.price_unit * this.goods_number
+				let price = Calc.Mul(this.price_unit, this.goods_number)
+				if(price < this.order_item_amount_total) {
+					return price
+				}
+				return this.order_item_amount_total
 			}
 		},
 		onLoad(options) {
@@ -158,17 +163,6 @@
 					})
 				}
 			}).catch(error => {})
-			// axios.get('/api/v1/refund_order_reasons').then(res => {
-			// 	if (res.code === 1) {
-			// 		this.reasons = res.data.reasons_type2.map((item, index) => {
-			// 			return {
-			// 				name: item
-			// 			}
-			// 		})
-			// 		this.loaded = true
-			// 	}
-			// })
-
 		},
 		methods: {
 			async getFormDataParams() {

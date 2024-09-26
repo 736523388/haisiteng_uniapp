@@ -1,7 +1,7 @@
 import store from '@/store/index.js'; //需要引入store
 import Request from 'luch-request'
 var BASE_URL = 'https://hst.test.cqclxsc.com'
-// var BASE_URL = 'http://127.0.0.1:8000'
+// var BASE_URL = 'http://localhost:8000'
 // #ifdef MP-WEIXIN
 const accountInfo = uni.getAccountInfoSync();
 console.log(accountInfo)

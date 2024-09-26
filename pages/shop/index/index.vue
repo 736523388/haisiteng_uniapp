@@ -33,7 +33,7 @@
 				</view>
 			</view>
 		</view>
-		
+		<drag-button :isDock="true" :existTabBar="true" />
 	</view>
 </template>
 

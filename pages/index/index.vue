@@ -1,7 +1,7 @@
 <template>
 
 	<view class="page-body switch-tab">
-		<view style="position: absolute;top: 0;left: 0;right: 0;">
+		<!-- <view style="position: absolute;top: 0;left: 0;right: 0;">
 			<image src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/home_bg.png" mode="aspectFill"
 				style="width:100%;height: 500rpx;" />
 		</view>
@@ -23,11 +23,6 @@
 							<button open-type="contact"
 								style="position: absolute;top: 0;right: 0;left: 0;bottom: 0;opacity: 0;"></button>
 						</view>
-						<!-- <image src="/images/my/menu_home.png" style="height: 24rpx;width: 24rpx;margin: 0;padding: 0;vertical-align:middle;" />
-	          <view style="display: inline-block;height: 24rpx;width: 24rpx;">
-	            <image src="/images/my/menu_home.png" style="height: 100%;width: 100%;margin: 0;padding: 0;vertical-align:middle;" />
-	          </view> -->
-						<!-- <van-icon name="/images/my/menu_05.png" size="20px" /> -->
 					</view>
 
 					<block v-if="is_login">
@@ -65,19 +60,33 @@
 					</view>
 				</view>
 			</scroll-view>
-		</view>
+		</view> -->
+		
+		<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="default" field="content" :dotsStyles="dotsStyles">
+		<swiper style="height: 1125rpx;" circular :autoplay="true"
+			interval="5000" duration="500" @change="swiperChange">
+			<swiper-item v-for="(item, index) in sliderInfo" :key="item">
+				<view style="position: relative;">
+					<image style="width: 100%;" :src="item.url" mode="widthFix"></image>
+					<view style="position: absolute;bottom: 80rpx;z-index: 9999;width: 650rpx;left: 50rpx;">
+						<button type="default" style="border-radius: 999rpx;">了解更多</button>
+					</view>
+				</view>
+			</swiper-item>
+		</swiper>
+		</uni-swiper-dot>
 
-		<view class="container menu-card" v-for="(item, index) in page_decoration" wx:key="hero">
-			<view style="background-color: #fff;">
-				<image mode="aspectFill" :src="item.hero" :key="item.title" style="height: 290rpx;width:290rpx;" />
+		<view class="margin-top-sm" v-for="(item, index) in page_decoration" :key="item.hero">
+			<view style="background-color: #fff;width: 100%;" @click="decorationClick(index)">
+				<image mode="widthFix" :src="item.hero" :key="item.title" style="width: 100%;" />
 			</view>
-			<view class="content">
+			<!-- <view class="content">
 				<view class="title text-df">{{item.title}}</view>
 				<view class="desc text-df" style="margin-top: 10rpx;">{{item.desc}}</view>
 				<view class="btn" style="margin-top: 31rpx;">
 					<u-button type="primary" size="small" @click="decorationClick(index)">{{item.btn_text}}</u-button>
 				</view>
-			</view>
+			</view> -->
 		</view>
 
 		<view class="container banner">
@@ -96,6 +105,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
 		<!-- <custom-tabbar :currentIndex="0" @switchTab="switchTab"></custom-tabbar> -->
 		<!-- <custom-tab-bar direction="horizontal" :show-icon="true" :selected="0" @onTabItemTap="switchTab" /> -->
 	</view>
@@ -110,6 +120,40 @@
 	export default {
 		data() {
 			return {
+				dotsStyles:{
+					selectedBackgroundColor: "#fff"
+				},
+				current: 0,
+				sliderInfo:[
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					},
+					{
+						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
+						content: ''
+					}
+				],
 				value1: 0,
 				defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
 				brand_desc: '在海丝腾门店或线上渠道购买任意产品，即可升级为尊贵会员，获得丰富尊享礼遇。',
@@ -163,6 +207,18 @@
 			}
 		},
 		methods: {
+			swiperChange(e){
+				this.current = e.detail.current
+			},
+			btnTouchend(e){
+				console.log(e)
+			},
+			btnTouchstart(e){
+				console.log(e)
+			},
+			btnClick(e){
+				console.log(e)
+			},
 			/**
 			 * 跳转到页面
 			 * @param {Object} path
@@ -186,7 +242,7 @@
 						url = '/pages/shop/index/index'
 						break
 					case 2:
-						url = '/pages/shop/goods_index/goods_index'
+						url = '/pages/shop/goods_integral/goods_integral'
 						break
 					case 3:
 						url = '/pages/index/share/share'

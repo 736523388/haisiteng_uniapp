@@ -44,7 +44,7 @@
 ">{{item.activity_title}}</text>{{item.goods_name}}</view>
 						<view class="text-gray text-sm">{{item.goods_spec_alias}}</view>
 						<view class="margin-top">
-							<text v-if="item.price_selling != item.price_real" class="text-xs text-gray" style="text-decoration: line-through;"><text class="text-sm">￥{{item.price_selling}}</text></text>
+							<text v-if="item.price_market != item.price_real" class="text-xs text-gray" style="text-decoration: line-through;"><text class="text-sm">￥{{item.price_market}}</text></text>
 							<text class="text-xs">￥<text class="text-df">{{item.price_real}}</text></text>
 							<text class="margin-left-xs"> x {{item.stock_sales}}</text>
 						</view>
@@ -98,7 +98,7 @@
 							</view>
 						</template>
 					</u-cell>
-					<u-cell :border="false" center v-if="use_available && integral_available > 0">
+					<u-cell :border="false" center v-if="integral_available > 0">
 						<view slot="title" class="u-slot-title">
 							<text class="u-cell-text">积分抵扣</text>
 						</view>
@@ -370,10 +370,6 @@
 		onShow() {
 			checkLogin(async () => {
 				try {
-					const ref1 = await axios.get('/api/v1/user/info')
-					if (ref1.code === 1) {
-						this.integral_available = ref1.data.integral_available
-					}
 					const ref2 = await axios.get('/api/v1/user/address')
 					if (ref2.code === 1) {
 						this.$store.commit('user_address/update_user_address_list', {
@@ -560,10 +556,14 @@
 					this.coupon = coupon
 					// this.couponTabsLabel[0] = '可用（' + coupon.available.length + '）'
 					// this.couponTabsLabel[1] = '不可用（' + coupon.unavailable.length + '）'
-					this.loaded = true
-					if (res.data.items.length === 1 && res.data.items[0].integral_limit !== '0.00') {
+					
+					if(res.data.total.use_integral){
 						this.use_available = true
+						this.integral_available = res.data.total.integral_available
 					}
+					this.$nextTick(() => {
+						this.loaded = true
+					})
 				} catch (error) {
 					uni.showToast({
 						title: '出错了，请稍后重试！',

@@ -1,39 +1,45 @@
 <template>
 	<view class="page-body">
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
-		<view v-show="loaded">
-			<image :src="shop_index_background" mode="widthFix" style="width: 100%;"/>
-
-			<view style="width: 690rpx;height: 220rpx;margin: 20rpx auto;"
-				@click="$globalJump2View('/pages/shop/goods_integral/goods_integral', true)">
-				<u--image src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E5%95%86%E5%9F%8E2.jpg"
-					height="220rpx" width="100%" mode="aspectFit" />
+		<view v-if="loaded" class="flex">
+			<view class="goods-cate-box">
+				<view @click="current=index" class="padding-tb-sm goods-cate-item text-lg" :class="{active: index===current}"
+					v-for="(item, index) in list" :key="item.id">{{item.name}}</view>
 			</view>
-			<!-- 产品 -->
-			<view v-for="(item, index) in list" :key="item.id">
-				<view class="page-bar">
-					<view class="text-xl" style="font-weight: bold;">{{item.name}}</view>
-					<view class="text-sm" style="font-weight: bold;color: #71717a;margin-top: 12rpx;">{{item.english}}
-					</view>
-				</view>
-				<view class="container" style="display: flex;flex-wrap: wrap;justify-content: space-between;">
-					<navigator :url="'/pages/shop/goods_detail/goods_detail?id=' + item.id" v-for="item in item.list"
-						wx:key="code" style="margin: 20rpx 0;background-color: #fff;width: 330rpx;overflow: hidden;">
-						<u--image :src="item.cover" width="330rpx" height="330rpx" mode="aspectFill" />
-						<view style="padding: 4rpx 10rpx 10rpx 10rpx;">
-							<view class="text-sm" style="height: 60rpx;line-height: 30rpx;overflow: hidden;">
-								<text class="u-line-2">{{item.name}}</text>
-							</view>
-							<view class="margin-top-sm padding-bottom-xs flex align-center">
-								<uni-tag v-if="item.activity_title != null" :text="item.activity_title" size="mini" type="error"></uni-tag>
-								<text class="text-xs margin-lr-xs">¥</text>
-								<text class="text-df">{{item.price_selling}}</text>
-							</view>
-						</view>
-					</navigator>
-				</view>
+			<view class="goods-box">
+				<uni-list :border="false" style="padding-bottom: 50px;">
+					<block v-for="(v, index) in list" :key="item.id">
+						<uni-list-item v-show="index === current" v-for="(item, k) in v.list" :key="item.code" style="padding: 0;" direction="column">
+							<template v-slot:body>
+								<navigator :url="'/pages/shop/goods_detail/goods_detail?id=' + item.id"
+									style="background-color: #fff;width: 100%;" class="flex">
+									<view style="width: 200rpx;height: 200rpx;">
+										<image mode="scaleToFill" :src="item.cover" style="width: 200rpx;height: 200rpx;"></image>
+									</view>
+									
+									<view style="padding: 4rpx 10rpx 10rpx 10rpx;">
+										<view class="text-sm" style="height: 60rpx;line-height: 30rpx;overflow: hidden;">
+											<text class="u-line-2">{{item.name}}</text>
+										</view>
+										<view v-if="item.activity_title != null">
+											<uni-tag :text="item.activity_title" size="mini"
+												type="error"></uni-tag>
+										</view>
+										<view class="margin-top-sm padding-bottom-xs flex align-center">
+											<text class="text-xs margin-lr-xs">¥</text>
+											<text class="text-df">{{item.price_selling}}</text>
+										</view>
+										<view class="text-sm text-gray">剩余{{item.stock_total - item.stock_sales}}件</view>
+									</view>
+								</navigator>
+							</template>
+						</uni-list-item>
+					</block>
+					
+				</uni-list>
 			</view>
 		</view>
+		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
 	</view>
 </template>
 
@@ -48,6 +54,7 @@
 		data() {
 			return {
 				loaded: false,
+				current: 0,
 				list: [],
 			};
 		},
@@ -72,7 +79,7 @@
 					this.$nextTick(() => {
 						this.loaded = true
 					})
-					
+
 				})
 			}
 		}
@@ -80,13 +87,42 @@
 </script>
 
 <style lang="scss" scoped>
+	page{
+		background-color: #fff;
+	}
 	.page-body {
-		background-color: #f8f8f8;
-		/* position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0; */
-		box-sizing: border-box;
+		// background-color: #fff;
+		// position: fixed;
+		// left: 0;
+		// top: 0;
+		// right: 0;
+		// bottom: 0;
+		// box-sizing: border-box;
+		.goods-cate-box {
+			position: fixed;
+			left: 0;
+			top: 0;
+			right: 530rpx;
+			bottom: 0;
+			background-color: rgb(226, 226, 226);
+			text-align: center;
+			
+			.goods-cate-item {
+				border-bottom: 1px solid #e8e8e8;
+				&.active {
+					color: #fff;
+					background-color: rgb(114, 140, 177);
+				}
+			}	
+		}
+		
+		.goods-box{
+			position: absolute;
+			left: 220rpx;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #fff;
+		}
 	}
 </style>

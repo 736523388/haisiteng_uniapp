@@ -24,7 +24,9 @@ App.mpType = 'app'
 // 引入全局uView
 import uView from '@/uni_modules/uview-ui'
 Vue.use(uView)
-
+import dragButton from './components/drag-button/drag-button.vue'
+	Vue.component('drag-button',dragButton)
+	
 const app = new Vue({
   store,
   ...App

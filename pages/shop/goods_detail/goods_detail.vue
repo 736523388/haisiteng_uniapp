@@ -4,8 +4,9 @@
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
 			<!-- 轮播图 -->
-			<swiper class="screen-swiper square-dot" indicator-dots circular :autoplay="detail.video == ''"
-				interval="5000" duration="500" indicator-color="#6b7280" indicator-active-color="#374151">
+			<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="nav" field="content">
+			<swiper class="screen-swiper square-dot" circular :autoplay="detail.video == ''"
+				interval="5000" duration="500" @change="swiperChange">
 				<swiper-item v-if="detail.video != ''">
 					<video style="width: 100%;" :src="detail.video" autoplay loop muted :show-play-btn="false"
 						:controls="false" object-fit="cover"></video>
@@ -16,19 +17,15 @@
 					</view>
 				</swiper-item>
 			</swiper>
+			</uni-swiper-dot>
 			<view class="bg-white padding-sm">
-				<view>
-					<!-- 					<view v-if="detail.activity_title != null" class="text-white"
-						style="background-color: #e43d33;flex: 1;">
-						{{detail.activity_title}}
-					</view> -->
-					<text v-if="detail.activity_title != null" class="text-white" style="background-color: #e43d33;border:1px solid #e43d33;padding: 1px 3px;border-radius: 2px;font-size: 12px;
-">{{detail.activity_title}}</text>
-					<text class="margin-left-xs">{{detail.name}}</text>
+				<view class="text-bold margin-left-xs text-sm flex">
+					<view class="margin-right-sm" v-if="detail.price_market != detail.price_selling">原价<text class="text-lighter">￥</text><text class="text-xl">{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text></view>
+					<view style="color: #e43d33;">销售价<text class="text-lighter">￥</text><text class="text-xl">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text></view>
 				</view>
-				<view class="margin-top-xs flex align-center">
+				<view class="margin-left-xs margin-top-sm text-bold">{{detail.name}}</view>
+				<!-- <view class="margin-top-xs flex align-center">
 					<view style="text-decoration: line-through;" v-if="detail.price_market != detail.price_selling">
-						<!-- <text class="text-sm" style="text-decoration: line-through;">¥</text> -->
 						<text
 							class="text-lg margin-left-xxs text-gray">¥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text>
 					</view>
@@ -40,10 +37,17 @@
 					<text class="margin-left-xxs"
 						v-if="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
 					<view class="text-sm margin-left-xxs"> / 件</view>
-				</view>
+				</view> -->
 
 				<!-- <view class="">{{checkspec.goods_spec_alias}}</view> -->
 				<view class="text-sm text-desc">{{detail.remark}}</view>
+			</view>
+			<view v-if="detail.activity_title !=''" class="padding-sm margin-left-xs flex align-center">
+				<view>促销</view>
+				<view class="margin-left-sm margin-right-xs">
+					<uni-tag :text="detail.activity_title" custom-style="background-color: #fff; border-color: #e43d33; color: #e43d33;padding:1px 1px;"></uni-tag>
+				</view>
+				<view>{{detail.activity_desc}}</view>
 			</view>
 			<view class="margin-top-sm" style="padding-bottom: 160rpx;">
 				<rich-text style="font-size: 0;" :nodes="detail.content"></rich-text>
@@ -130,6 +134,7 @@
 				</view>
 			</view>
 		</uni-popup>
+		<drag-button :isDock="true" :existTabBar="true" />
 	</view>
 </template>
 
@@ -153,6 +158,9 @@
 				showSpecFlag: false,
 				Num: 1,
 				checkSpecArr: [],
+				sliderInfo: [],
+				current: 0,
+				swiperDotIndex: 0
 			}
 		},
 		computed: {
@@ -213,6 +221,9 @@
 			}
 		},
 		methods: {
+			swiperChange(e){
+				this.current = e.detail.current
+			},
 			showPreviewImage(index) {
 				uni.previewImage({
 					current: index,
@@ -322,9 +333,23 @@
 				axios.get('/api/v1/goods/' + id).then(res => {
 					console.log(res)
 					if (res.code === 1) {
-						this.loaded = true
 						this.detail = res.data
-
+						const sliderInfo = res.data.slider.map((item,index) => {
+							return {
+								type: 'image',
+								url: item,
+								content: ''
+							}
+						})
+						if(res.data.video != '') {
+							sliderInfo.unshift({
+								type: 'video',
+								url: 'res.data.video',
+								content: ''
+							})
+						}
+						console.log(sliderInfo)
+						this.sliderInfo = sliderInfo
 						const specs = [...res.data.specs]
 						specs.forEach((v, vk) => {
 							this.checkSpecArr[vk] = ""
@@ -335,6 +360,9 @@
 										.name)
 								})
 							})
+						})
+						this.$nextTick(() => {
+							this.loaded = true
 						})
 						console.log(specs)
 						console.log(this.checkSpecArr)

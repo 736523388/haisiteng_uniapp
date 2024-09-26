@@ -1107,6 +1107,9 @@ image {
 .text-bold {
   font-weight: bold;
 }
+.text-lighter {
+  font-weight: lighter;
+}
 
 .text-center {
   text-align: center;
