@@ -62,34 +62,47 @@
 			</scroll-view>
 		</view> -->
 		
-		<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="default" field="content" :dotsStyles="dotsStyles">
+		<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="default" field="desc" :dotsStyles="dotsStyles">
 		<swiper style="height: 1125rpx;" circular :autoplay="true"
 			interval="5000" duration="500" @change="swiperChange">
-			<swiper-item v-for="(item, index) in sliderInfo" :key="item">
-				<view style="position: relative;">
-					<image style="width: 100%;" :src="item.url" mode="widthFix"></image>
-					<view style="position: absolute;bottom: 80rpx;z-index: 9999;width: 650rpx;left: 50rpx;">
+			<swiper-item v-for="(item, index) in sliderInfo" :key="item.id">
+				<view style="position: relative;" @click="adClick(item)">
+					<image style="width: 100%;" :src="item.cover" mode="widthFix"></image>
+					<view v-if="item.link_type > 0" style="position: absolute;bottom: 80rpx;z-index: 9999;width: 650rpx;left: 50rpx;">
 						<button type="default" style="border-radius: 999rpx;">了解更多</button>
 					</view>
 				</view>
 			</swiper-item>
 		</swiper>
 		</uni-swiper-dot>
-
-		<view class="margin-top-sm" v-for="(item, index) in page_decoration" :key="item.hero">
-			<view style="background-color: #fff;width: 100%;" @click="decorationClick(index)">
-				<image mode="widthFix" :src="item.hero" :key="item.title" style="width: 100%;" />
+		
+		<view class="margin-top-sm" v-for="(item, index) in ad_home_center" :key="item.id">
+			<view style="width: 100%;" @click="adClick(item)">
+				<image mode="widthFix" :src="item.cover" style="width: 100%;" />
 			</view>
-			<!-- <view class="content">
-				<view class="title text-df">{{item.title}}</view>
-				<view class="desc text-df" style="margin-top: 10rpx;">{{item.desc}}</view>
-				<view class="btn" style="margin-top: 31rpx;">
-					<u-button type="primary" size="small" @click="decorationClick(index)">{{item.btn_text}}</u-button>
-				</view>
-			</view> -->
 		</view>
-
-		<view class="container banner">
+		
+		<view class="container bg-white padding-lr-sm padding-tb" @click="adBottomClick(index_banner[0].rule)">
+			<view class="flex align-center">
+				<view style="flex: 1;">
+					<view class="text-lg text-bold">探索背后的故事</view>
+					<view class="margin-top-xs text-sm text-gray">We Sleep·Do You?</view>
+				</view>
+				<view style="width: 350rpx;">
+					<image mode="widthFix" :src="index_banner[0].img" style="width: 100%;border-radius: 10rpx;" />
+				</view>
+			</view>
+			<view class="margin-top-sm" @click="">
+				<view class="text-lg text-bold" style="letter-spacing: 4rpx;">{{index_banner[0].name}}</view>
+				<view class="flex align-center justify-between margin-top-xs text-gray">
+					<view class="text-sm">{{index_banner[0].desc}}</view>
+					<view class="text-lg">···</view>
+				</view>
+			</view>
+		</view>
+		<view style="height: 50rpx;"></view>
+		
+		<!-- <view class="container banner">
 			<view class="container-bar text-xl" style="font-weight: 500;">
 				探索背后的故事
 			</view>
@@ -104,10 +117,8 @@
 					</view>
 				</swiper-item>
 			</swiper>
-		</view>
+		</view> -->
 		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
-		<!-- <custom-tabbar :currentIndex="0" @switchTab="switchTab"></custom-tabbar> -->
-		<!-- <custom-tab-bar direction="horizontal" :show-icon="true" :selected="0" @onTabItemTap="switchTab" /> -->
 	</view>
 
 </template>
@@ -124,55 +135,9 @@
 					selectedBackgroundColor: "#fff"
 				},
 				current: 0,
-				sliderInfo:[
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/home_20240926181614.jpg',
-						content: ''
-					}
-				],
-				value1: 0,
 				defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
 				brand_desc: '在海丝腾门店或线上渠道购买任意产品，即可升级为尊贵会员，获得丰富尊享礼遇。',
-				top_menu: [{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%BA%8A%E5%85%B71634107333713.png',
-						title: '我的床具',
-						path: '/pages/my/my_beds/my_beds'
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E5%85%BB%E6%8A%A4%E4%B8%AD%E5%BF%831634107335313.png',
-						title: '预约保养',
-						path: '/pages/index/maintenance_service/maintenance_service'
-					},
-					{
-						url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%8D%A1%E5%88%B81634107335923.png',
-						title: '会员福利',
-						path: '/pages/index/coupon/coupon'
-					},
-				]
+				
 			}
 		},
 		computed: {
@@ -180,7 +145,9 @@
 				app_logo: state => state.global.app_logo,
 				index_banner: state => state.global.index_banner,
 				page_decoration: state => state.global.page_decoration,
-				userinfo: state => state.user.userinfo
+				userinfo: state => state.user.userinfo,
+				sliderInfo: state => state.global.ad,
+				ad_home_center: state => state.global.ad_home_center
 			}),
 			...mapGetters({
 				is_login: 'user/is_login',
@@ -207,6 +174,7 @@
 			}
 		},
 		methods: {
+			
 			swiperChange(e){
 				this.current = e.detail.current
 			},
@@ -258,22 +226,58 @@
 				let rule = this.index_banner[e.currentTarget.dataset.index].rule
 				let [type, id] = rule.split('#')
 				if (rule != "#" && id === undefined) {
-					wx.navigateTo({
+					uni.navigateTo({
 						url: '/pages/web_view/web_view?url=' + encodeURI(rule),
 					})
 				} else if (id !== undefined) {
 					if (type == 'GOODS') {
-						wx.navigateTo({
+						uni.navigateTo({
 							url: '/pages/shop/goods_datail/goods_datail?id=' + id,
 						})
 					}
 				}
+			},
+			adBottomClick(rule){
+				uni.navigateTo({
+					url: '/pages/web_view/web_view?url=' + encodeURI(rule),
+				})
+			},
+			adClick(item){
+				console.log(item)
+				if(item.link_type == 1) {
+					if(item.need_login && !this.is_login){
+						uni.navigateTo({
+							url: '/pages/login/login'
+						})
+						return false
+					}
+					let path = item.path
+					if(item.query){
+						path = path + '?' + item.query
+					}
+					if(item.jump_type == 1){
+						uni.navigateTo({
+							url: path
+						})
+					} else {
+						uni.switchTab({
+							url: path
+						})
+					}
+				} else if(item.link_type == 2) {
+					wx.navigateTo({
+						url: '/pages/web_view/web_view?url=' + encodeURI(item.path),
+					})
+				} 
 			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	page{
+		background-color: #f8f8f8;
+	}
 	.page-body {
 		background-color: #f8f8f8;
 		box-sizing: border-box;

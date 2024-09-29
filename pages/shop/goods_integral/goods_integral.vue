@@ -15,7 +15,7 @@
 						</view>
 					</view>
 					<view class="text-sm text-desc">
-						<text @click="$globalJump2View('/pages/my/integral_home/integral_home')">积分中心</text>
+						<text @click="$globalJump2View('/pages/my/integral_home/integral_home', true)">积分中心</text>
 						<text style="margin: 0 6rpx;">|</text>
 						<text @click="$globalJump2View('/pages/my/integral/integral', true)">积分记录</text>
 					</view>
@@ -101,28 +101,31 @@
 			})
 		},
 		onLoad() {
-			checkLogin(() => {
-				const getIntegral = axios.get('/api/v1/user/integral/total')
-				const getGoods = axios.get('/api/v1/goods?is_integral=1')
-				const getGift = axios.get('/api/v1/user/integral/gift')
-				Promise.all([getIntegral, getGoods, getGift]).then(results => {
-					if(results[0].code === 1 && results[1].code === 1 && results[2].code === 1) {
-						this.integral_available = results[0].data
-						this.list = results[1].data.list
-						this.gifts = results[2].data
-						this.$nextTick(() => {
-							this.loaded = true
-						})
+			const getGoods = axios.get('/api/v1/goods?is_integral=1')
+			const getGift = axios.get('/api/v1/integral/gift')
+			let requests = [getGoods, getGift];
+			if(this.is_login) {
+				requests.push(axios.get('/api/v1/user/integral/total'))
+			}
+			Promise.all(requests).then(results => {
+				let red = true
+				results.forEach((item,index) => {
+					if(item.code !== 1) {
+						red = false
 					}
-				}).catch(error => {
-					console.log(error)
 				})
-				axios.get('/api/v1/user/info').then(res => {
-					if (res.code === 1) {
-						this.integral_available = res.data.integral_available
+				if(red){
+					this.list = results[0].data.list
+					this.gifts = results[1].data
+					if(this.is_login) {
+						this.integral_available = results[2].data
 					}
-
-				})
+					this.$nextTick(() => {
+						this.loaded = true
+					})
+				}
+			}).catch(error => {
+				console.log(error)
 			})
 		},
 		methods: {

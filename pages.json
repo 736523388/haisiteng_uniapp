@@ -16,15 +16,6 @@
 			"needLogin": false
 		},
 		{
-			"path": "pages/shop_cart/shop_cart",
-			"style": {
-				"navigationBarTitleText": "购物车",
-				"enablePullDownRefresh": false
-				// "navigationStyle": "custom"
-			},
-			"needLogin": true
-		},
-		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",

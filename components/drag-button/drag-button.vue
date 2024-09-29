@@ -11,7 +11,7 @@
 			:class="{transition: isDock && !isMove }"
 		>
 		<view style="display: inline-block;position: relative;height: 80rpx;width: 80rpx;">
-			<image src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my/menu_home.png"
+			<image src="/static/tabbar/contact3.png"
 				style="display: block;height: 100%;width: 100%;margin: 0;padding: 0;position: absolute;top: 0;right: 0;bottom: 0;" />
 			<button open-type="contact"
 				style="position: absolute;top: 0;right: 0;left: 0;bottom: 0;opacity: 0;"></button>

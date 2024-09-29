@@ -104,11 +104,11 @@
 				</view>
 			</view>
 		</view>
-		<view class="bg-white" style="height: 100%;"
+		<view class="bg-white" style="height: 100vh;"
 			v-if="loaded && ((carts.length === 0 && invalid.length === 0) || !is_login)">
 			<u-empty mode="data" icon="/static/empty_data.png" :text="is_login ? '购物车是空的 ~ 快去逛逛吧':'你未登录 ~'">
 				<view class="margin-top">
-					<u-button v-if="is_login" @click="$globalJump2View('/pages/shop/goods_index/goods_index')"
+					<u-button v-if="is_login" @click="go2goodsIndex"
 						type="primary" size="small" shape="circle" text="去逛逛"></u-button>
 					<u-button v-else @click="$globalJump2View('/pages/login/login')" type="primary" size="small"
 						shape="circle" text="点击注册/登录"></u-button>
@@ -160,6 +160,11 @@
 			}
 		},
 		methods: {
+			go2goodsIndex(){
+				uni.switchTab({
+					url: '/pages/shop/goods_index/goods_index'
+				})
+			},
 			removeLoseGoods() {
 				console.log('移除失效商品')
 				let id = ''

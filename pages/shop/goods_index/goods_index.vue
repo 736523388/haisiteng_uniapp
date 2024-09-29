@@ -3,7 +3,7 @@
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded" class="flex">
 			<view class="goods-cate-box">
-				<view @click="current=index" class="padding-tb-sm goods-cate-item text-lg" :class="{active: index===current}"
+				<view @click="current=index" class="padding-tb-lg goods-cate-item text-lg" :class="{active: index===current}"
 					v-for="(item, index) in list" :key="item.id">{{item.name}}</view>
 			</view>
 			<view class="goods-box">
@@ -12,24 +12,24 @@
 						<uni-list-item v-show="index === current" v-for="(item, k) in v.list" :key="item.code" style="padding: 0;" direction="column">
 							<template v-slot:body>
 								<navigator :url="'/pages/shop/goods_detail/goods_detail?id=' + item.id"
-									style="background-color: #fff;width: 100%;" class="flex">
+									style="background-color: #fff;width: 100%;" class="flex align-center">
 									<view style="width: 200rpx;height: 200rpx;">
 										<image mode="scaleToFill" :src="item.cover" style="width: 200rpx;height: 200rpx;"></image>
 									</view>
 									
-									<view style="padding: 4rpx 10rpx 10rpx 10rpx;">
+									<view class="padding-xs padding-left">
 										<view class="text-sm" style="height: 60rpx;line-height: 30rpx;overflow: hidden;">
 											<text class="u-line-2">{{item.name}}</text>
 										</view>
-										<view v-if="item.activity_title != null">
+										<view v-if="item.activity_title">
 											<uni-tag :text="item.activity_title" size="mini"
 												type="error"></uni-tag>
 										</view>
 										<view class="margin-top-sm padding-bottom-xs flex align-center">
-											<text class="text-xs margin-lr-xs">¥</text>
-											<text class="text-df">{{item.price_selling}}</text>
+											<!-- <text class="text-xs margin-lr-xs">¥</text> -->
+											<text class="text-df">¥{{item.price_selling}}</text>
 										</view>
-										<view class="text-sm text-gray">剩余{{item.stock_total - item.stock_sales}}件</view>
+										<!-- <view class="text-sm text-gray">剩余{{item.stock_total - item.stock_sales}}件</view> -->
 									</view>
 								</navigator>
 							</template>
@@ -101,17 +101,38 @@
 		.goods-cate-box {
 			position: fixed;
 			left: 0;
+			/* #ifdef H5 */
+			top: 44px;
+			/* #endif */
+			/* #ifndef H5 */
 			top: 0;
+			/* #endif */
 			right: 530rpx;
 			bottom: 0;
-			background-color: rgb(226, 226, 226);
+			background-color: #f3f3f3;
 			text-align: center;
+			color: #000030;
 			
 			.goods-cate-item {
-				border-bottom: 1px solid #e8e8e8;
+				position: relative;
+				&:not(:first-child)::before {
+					content: " ";
+					position: absolute;
+					width: 100%;
+					left: 0;
+					top: 0;
+					border-top: 1px solid #e8e8e8;
+				}
 				&.active {
-					color: #fff;
-					background-color: rgb(114, 140, 177);
+					background-color: #fff;
+					&::after {
+						content: " ";
+						position: absolute;
+						height: 80%;
+						left: 0;
+						top: 10%;
+						border-left: 2px solid #000030;
+					}
 				}
 			}	
 		}

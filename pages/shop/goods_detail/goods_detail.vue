@@ -42,7 +42,7 @@
 				<!-- <view class="">{{checkspec.goods_spec_alias}}</view> -->
 				<view class="text-sm text-desc">{{detail.remark}}</view>
 			</view>
-			<view v-if="detail.activity_title !=''" class="padding-sm margin-left-xs flex align-center">
+			<view v-if="detail.activity_title" class="padding-sm margin-left-xs flex align-center">
 				<view>促销</view>
 				<view class="margin-left-sm margin-right-xs">
 					<uni-tag :text="detail.activity_title" custom-style="background-color: #fff; border-color: #e43d33; color: #e43d33;padding:1px 1px;"></uni-tag>

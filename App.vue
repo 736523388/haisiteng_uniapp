@@ -11,6 +11,20 @@
 					banner: res.data
 				})
 			})
+			axios.get('/api/v1/ad?position=home_top').then(res => {
+				if(res.code === 1){
+					this.$store.commit('global/update_ad', {
+						ad: res.data
+					})
+				}
+			}).catch(error => {})
+			axios.get('/api/v1/ad?position=home_center').then(res => {
+				if(res.code === 1){
+					this.$store.commit('global/update_ad_home_center', {
+						ad: res.data
+					})
+				}
+			}).catch(error => {})
 			axios.get("/api/v1/common").then(res => {
 				this.$store.commit('global/update_common', res.data)
 			})

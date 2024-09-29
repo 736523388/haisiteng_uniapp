@@ -3,47 +3,15 @@
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
 			<view class="header-box">
-				<u-image width="750rpx" height="235rpx"
-					src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/my_bg.jpg"></u-image>
 				<view class="order-status">
 					<view class="order-status-title">
 						<text style="margin-left: 8rpx;">{{order_status_txt_arr[order_desc.status] || ''}}</text>
 					</view>
 					<view class="order-status-desc">{{order_status_desac_arr[order_desc.status] || ''}}</view>
 				</view>
-				<view class="express" v-if="order_desc.status && order_desc.status > 4">
-					<view class="order-card">
-						<view class="order-card-icon">
-							<u-icon name="car-fill" />
-						</view>
-						<view>
-							<view style="padding-bottom: 10rpx;">物流快递：{{order_desc.truck.company_name}}</view>
-							<view>快递单号：{{order_desc.truck.send_number}}
-								<view v-if="order_desc.truck.send_number" style="display: inline-block;"><u-tag @click="copy" type="warning" plain
-										shape="circle" size="mini" color="#9CA3AF" text="复制"></u-tag></view>
-
-							</view>
-						</view>
-					</view>
-				</view>
-
 			</view>
-			<view style="background-color: #fff;">
-				<view class="truck">
-					<view class="order-card">
-						<view class="order-card-icon">
-							<u-icon name="map" />
-						</view>
-						<view>
-							<view style="padding-bottom: 10rpx;">{{order_desc.truck.address_name}}<text
-									style="margin-left: 8rpx;">{{order_desc.truck.address_phone}}</text></view>
-							<view>
-								地址：{{order_desc.truck.address_province}}{{order_desc.truck.address_city}}{{order_desc.truck.address_area}}{{order_desc.truck.address_content}}
-							</view>
-						</view>
-					</view>
-				</view>
-				<view class="van-hairline--bottom goods-box">
+			<view class="bg-white">
+				<view class="goods-box">
 					<view class="goods-item" v-for="(item, index) in order_desc.items" :key="index">
 						<u-image width="161rpx" height="161rpx" :src="item.goods_cover"></u-image>
 						<view class="goods-title-price">
@@ -57,57 +25,58 @@
 						</view>
 					</view>
 				</view>
-				<view>
-					<!-- <u-button open-type="contact" custom-class="contact-btn" color="#fff" icon="chat-o" size="large"
-						type="default">联系客服</u-button> -->
+			</view>
+			<view class="bg-white">
+				<u-cell-group :border="false">
+					<u-cell :border="false" title="商品总金额" :value="'¥'+order_desc.goods_amount_total_original"></u-cell>
+					<u-cell :border="false" title="活动优惠" :value="'- ¥'+order_desc.goods_activity_discount_amount"></u-cell>
+					<u-cell :border="false" title="积分抵扣" :value="'- ¥'+order_desc.amount_integral"></u-cell>
+					<u-cell :border="false" title="运费" :value="order_desc.amount_express > 0 ?'¥'+order_desc.amount_express:'包邮'"></u-cell>
+					<u-cell :border="false" title="需付款：" :value="'¥'+order_desc.amount_real"></u-cell>
+				</u-cell-group>
+			</view>
+			<view class="container-xl bg-white padding-sm margin-top radius-xs">
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>订单编号</view>
+					<view class="flex align-center">
+						<view>{{order_desc.order_no}}</view><view class="copy" @click="copyOrderNo">复制</view>
+					</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>下单时间</view>
+					<view>{{order_desc.create_at}}</view>
+				</view>
+				<view class="flex align-start justify-between padding-tb-xs">
+					<view style="min-width: 200rpx;">收货信息</view>
+					<view style="text-align: right;">{{order_desc.truck.address_name}}，{{order_desc.truck.address_phone}}，{{order_desc.truck.address_province}}{{order_desc.truck.address_city}}{{order_desc.truck.address_area}}{{order_desc.truck.address_content}}</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>留言</view>
+					<view>{{order_desc.order_remark || '无'}}</view>
 				</view>
 			</view>
-			<view style="background-color: #fff;margin-top: 20rpx;">
-				<u-cell-group>
-					<u-cell :border="false">
-						<view slot="title">
-							<text>订单编号：{{order_desc.order_no}}</text>
-							<view class="margin-left-xs" style="display: inline-block;"><u-tag @click="copyOrderNo" type="warning" plain
-									shape="circle" size="mini" color="#9CA3AF" text="复制"></u-tag></view>
-						</view>
-					</u-cell>
-					<u-cell :border="false" :title="'下单时间：' + order_desc.create_at" />
-					<u-cell :border="false" title="配送方式：普通快递"></u-cell>
-					<u-cell :border="false" :title="'留    言：' + (order_desc.order_remark || '无')"></u-cell>
-				</u-cell-group>
-			</view>
-			<view class="end_box" style="background-color: #fff;margin-top: 20rpx;">
-				<u-cell-group>
-					<u-cell :border="false" title="商品总额" :value="'¥ '+order_desc.amount_goods"></u-cell>
-					<u-cell :border="false" title="运费" :value="'+ ¥ '+order_desc.amount_express"></u-cell>
-					<u-cell :border="false" title="需付款：" :value="'¥ '+order_desc.amount_total"></u-cell>
-				</u-cell-group>
-			</view>
+			<view style="height: 134rpx;"></view>
 			<view class="action-fiexd">
-				<view class="margin-right-sm" v-if="order_desc.status === 0"
-					style="display: inline-block;">
+				<view class="margin-right-sm" v-if="order_desc.status === 0" style="display: inline-block;">
 					<u-button type="error" size="small" :data-order_no="order_desc.order_no" @click.native.stop="remove"
 						text="删除" plain shape="circle"></u-button>
 				</view>
-				<view class="margin-right-sm" v-if="order_desc.status === 1 || order_desc.status === 2 || order_desc.status === 3"
+				<view class="margin-right-sm"
+					v-if="order_desc.status === 1 || order_desc.status === 2 || order_desc.status === 3"
 					style="display: inline-block;">
 					<u-button type="info" size="small" :data-order_no="order_desc.order_no" @click.native.stop="cancel"
 						text="取消订单" shape="circle"></u-button>
 				</view>
-				<view class="margin-right-sm" v-if="order_desc.status === 2"
-					style="display: inline-block;">
+				<view class="margin-right-sm" v-if="order_desc.status === 2" style="display: inline-block;">
 					<u-button type="primary" size="small" :data-order_no="order_desc.order_no" @click.native.stop="pay"
 						text="付款" shape="circle"></u-button>
 				</view>
-				<view class="margin-right-sm" v-if="order_desc.status === 5"
-					style="display: inline-block;">
+				<view class="margin-right-sm" v-if="order_desc.status === 5" style="display: inline-block;">
 					<u-button type="primary" size="small" :data-order_no="order_desc.order_no"
 						@click.native.stop="receive" text="确认收货"></u-button>
 				</view>
 				<view class="margin-right-sm" v-if="order_desc.status > 4" style="display: inline-block;">
-					<u-button
-						@click.native.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+order_desc.order_no)"
-						size="small" text="查看物流" plain shape="circle"></u-button>
+					<button type="default" size="mini" @click.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+order_desc.order_no)">查看物流</button>
 				</view>
 			</view>
 		</view>
@@ -124,8 +93,7 @@
 				loaded: false,
 				orderid: '',
 				order_desc: {},
-				//(0已取消,1预订单,2待支付,3支付中,4已支付,5已发货,6已完成,7已评价)
-				order_status_txt_arr: ['已取消', '待支付', '待支付', '待支付', '待发货', '待收货', '待评价', '已完成'],
+				order_status_txt_arr: ['已取消', '待支付', '待支付', '支付中', '待发货', '待收货', '已完成'],
 				order_status_icon_arr: ['warning-o', 'tosend', 'tosend', 'pending-payment', 'paid', 'logistics',
 					'comment-o', 'notes-o'
 				],
@@ -143,12 +111,13 @@
 				axios.get('/api/v1/user/order?order_no=' + this.orderid).then(res => {
 					if (res.code === 1) {
 						this.order_desc = res.data.list[0]
+						this.$nextTick(() => {
+							this.loaded = true
+						})
 						console.log(this.order_desc)
 					}
 
-				}).finally(() => {
-					this.loaded = true
-				})
+				}).catch(error => {})
 			},
 			cancel(e) {
 				uni.showModal({
@@ -331,7 +300,7 @@
 	}
 
 	.order-status {
-		color: #fff;
+		// color: #fff;
 		padding-top: 30rpx;
 		margin: 0 auto;
 		text-align: center;
@@ -436,4 +405,20 @@
 		text-align: right;
 		padding: 27rpx 10rpx 0 0;
 	}
+	.copy{
+		position: relative;
+		padding-left: 24rpx;
+		&::before{
+			content: " ";
+			position: absolute;
+			left: 10rpx;
+			height: 70%;
+			width: 1px;
+			top: 15%;
+			background-color: #000;
+			transform: scaleX(0.5);
+			transform-origin: 50% 100%;
+		}
+	}
+	
 </style>

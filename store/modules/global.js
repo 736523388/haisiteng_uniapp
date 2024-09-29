@@ -9,6 +9,8 @@ export default {
 		page_decoration: [],
 		site_copy: "©版权所有 2019-2024 forska",
 		index_banner: [],
+		ad: [],
+		ad_home_center: [],
 		shop_index_background: "https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png"
 	}),
 	mutations: {
@@ -16,6 +18,12 @@ export default {
 			banner
 		}) {
 			state.index_banner = banner
+		},
+		update_ad(state, {ad}){
+			state.ad = ad
+		},
+		update_ad_home_center(state, {ad}){
+			state.ad_home_center = ad
 		},
 		update_common(state, data) {
 			state.app_logo = data.app_logo;

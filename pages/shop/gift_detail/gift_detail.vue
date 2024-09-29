@@ -51,14 +51,12 @@
 		},
 		onLoad(options) {
 			this.id = options.id || ''
-			checkLogin(() => {
-				this.loadData()
-			})
+			this.loadData()
 
 		},
 		methods: {
 			loadData() {
-				axios.get('/api/v1/user/integral/gift/detail?id=' + this.id).then(res => {
+				axios.get('/api/v1/integral/gift/detail?id=' + this.id).then(res => {
 					if (res.code === 1) {
 						this.detail = res.data
 						this.$nextTick(() => {
