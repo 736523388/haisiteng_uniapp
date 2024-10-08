@@ -6,6 +6,13 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			axios.get('/api/v1/ad?position=shop_index_top').then(res => {
+				if(res.code === 1){
+					this.$store.commit('global/update_shop_index_background', {
+						ad: res.data
+					})
+				}
+			}).catch(error => {})
 			axios.get("/api/v1/slider?keys=SliderHome").then(res => {
 				this.$store.commit('global/update_banner', {
 					banner: res.data
@@ -36,7 +43,7 @@
 						})
 					}
 				}).catch(err => {
-					console.log(err)
+					console.log("获取购物车数量出错了，但不做任何操作", err)
 				})
 			} else {
 				this.$store.dispatch('goods_cart/update_goods_cart_number_badge', {

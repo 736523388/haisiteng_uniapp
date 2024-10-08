@@ -11,7 +11,7 @@ export default {
 		index_banner: [],
 		ad: [],
 		ad_home_center: [],
-		shop_index_background: "https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png"
+		shop_index_background: []
 	}),
 	mutations: {
 		update_banner(state, {
@@ -19,21 +19,29 @@ export default {
 		}) {
 			state.index_banner = banner
 		},
-		update_ad(state, {ad}){
+		update_ad(state, {
+			ad
+		}) {
 			state.ad = ad
 		},
-		update_ad_home_center(state, {ad}){
+		update_ad_home_center(state, {
+			ad
+		}) {
 			state.ad_home_center = ad
 		},
+		update_shop_index_background(state, {
+			ad
+		}) {
+			state.shop_index_background = ad
+		},
 		update_common(state, data) {
-			state.app_logo = data.app_logo;
-			state.app_name = data.app_name;
-			state.app_version = data.app_version;
-			state.bed_service_price = data.bed_service_price;
-			state.page_decoration = data.page_decoration;
+			state.app_logo = data.app_logo
+			state.app_name = data.app_name
+			state.app_version = data.app_version
+			state.bed_service_price = data.bed_service_price
+			state.page_decoration = data.page_decoration
 			state.site_copy = data.site_copy
 			state.beds_type_list = data.beds_type_list
-			state.shop_index_background = data.shop_index_background || 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/goods_shop_top_hero.png'
 		}
 	}
 }
