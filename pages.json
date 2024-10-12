@@ -493,6 +493,13 @@
 				"navigationBarTitleText" : "",
 				"enablePullDownRefresh" : false
 			}
+		},
+		{
+			"path" : "pages/payment_result/payment_result",
+			"style" : 
+			{
+				"navigationBarTitleText" : "支付结果"
+			}
 		}
 	],
 	"tabBar": {

@@ -6,6 +6,16 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			wx.loadFontFace({
+				global: true,
+			  family: 'Bitstream Vera Serif Bold',
+			  source: 'url("https://res.wx.qq.com/t/wx_fed/base/weixin_portal/res/static/font/33uDySX.ttf")',
+			  success() {console.log('success')},
+			  fail: (error) => {
+			  	console.log(error)
+			  }
+			})
+			console.log(2222)
 			axios.get('/api/v1/ad?position=shop_index_top').then(res => {
 				if(res.code === 1){
 					this.$store.commit('global/update_shop_index_background', {
@@ -83,17 +93,17 @@
 		box-sizing: border-box;
 	}
 	
-	// uni-page-body,html,body {
-	// 	height: 100%;
-	// }
-
-
+	/**
+	 * 基础容器
+	 */
 	.container {
 		box-sizing: border-box;
 		width: 690rpx;
 		margin: 0 auto;
 	}
-	
+	/**
+	 * 大号的容器
+	 */
 	.container-xl {
 		width: 710rpx;
 		margin: 0 auto;
