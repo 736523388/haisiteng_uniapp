@@ -31,8 +31,7 @@
 					<view class="coupon-right">
 						<view class="text-xl">{{ item.desc }}</view>
 						<view class="margin-top margin-right">
-							<u-button @click="receive(item.id)" :disabled="item.receive_status === 1" type="primary"
-								size="small" :text="item.receive_status === 1 ? '已领取': '立即领取'"></u-button>
+							<u-button @click="receive(item.id)" type="primary" size="small" text="立即领取"></u-button>
 						</view>
 					</view>
 				</view>
@@ -49,7 +48,7 @@
 		mapGetters
 	} from 'vuex'
 	import {
-		axios
+		axios,checkLogin
 	} from '@/utils/request.js'
 	export default {
 		data() {
@@ -71,7 +70,7 @@
 			})
 		},
 		onLoad() {
-			axios.get('/api/v1/coupon?new_user=0').then(res => {
+			axios.get('/api/v2/coupon?position=1').then(res => {
 				if (res.code === 1) {
 					this.list = res.data.list
 					this.loaded = true
@@ -80,24 +79,31 @@
 		},
 		methods: {
 			receive(id) {
-				axios.get(`/api/v1/user/coupon/receive/${id}`).then(res => {
-					uni.showToast({
-						title: res.info,
-						icon: res.code === 1 ? 'success' : 'none',
-						duration: 1200
+				checkLogin(() => {
+					axios.get(`/api/v1/user/coupon/receive/${id}`).then(res => {
+						uni.showToast({
+							title: res.info,
+							icon: res.code === 1 ? 'success' : 'none',
+							duration: 1200
+						})
+						// if (res.code === 1) {
+						// 	let index = this.list.findIndex(item => item.id === id)
+						// 	if (index !== -1) {
+						// 		setTimeout(() => {
+						// 			this.$set(this.list[index], 'receive_status', 1)
+						// 		}, 1200)
+						// 	}
+						// }
+					}).catch(error => {
+						console.log(error)
+						uni.showToast({
+							title: '网络错误，请稍后再试！',
+							icon: 'none',
+							duration: 1200
+						})
 					})
-					if (res.code === 1) {
-						let index = this.list.findIndex(item => item.id === id)
-						if (index !== -1) {
-							setTimeout(() => {
-								this.$set(this.list[index], 'receive_status', 1)
-							}, 1200)
-						}
-					}
-				}).catch(error => {
-					console.log(error)
-					this.$u.toast('网络错误，请稍后再试！')
 				})
+				
 			},
 		}
 	}

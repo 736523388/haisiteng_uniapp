@@ -492,16 +492,27 @@
 							this.orderLoading = false
 							uni.requestPayment({
 								...paymentRes.data.param,
-								success: (red) => {
-									if (red.errMsg == "requestPayment:ok") {
-										uni.navigateTo({
-											url: '/pages/my/my_order/my_order',
-										})
-									}
-								},
+								complete: () => {
+									uni.redirectTo({
+										url: '/pages/payment_result/payment_result?order_no=' + res.data.order_no
+									})
+								}
+								// success: (red) => {
+								// 	// if (red.errMsg == "requestPayment:ok") {
+								// 	// 	uni.navigateTo({
+								// 	// 		url: '/pages/my/my_order/my_order',
+								// 	// 	})
+								// 	// }
+								// 	uni.redirectTo({
+								// 		url: '/pages/payment_result/payment_result?order_no=' + res.data.order_no
+								// 	})
+								// },
 							})
 						} else {
-							this.resetPay(paymentRes.info, true)
+							uni.redirectTo({
+								url: '/pages/payment_result/payment_result?order_no=' + res.data.order_no
+							})
+							// this.resetPay(paymentRes.info, true)
 						}
 					}
 				})
