@@ -21,10 +21,14 @@
 					</view>
 				</view>
 				<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center" @click.stop>
+					<view class="margin-left-sm" v-if="item.status===0" style="border-radius: 999rpx;">
+						<button type="warn" size="mini" @click="remove(item.id)" style="border-radius: 999rpx;">删除</button>
+					</view>
+					<view class="margin-left-sm" v-if="item.status===1" style="border-radius: 999rpx;">
+						<button type="default" size="mini" @click="cancel(item.id)" style="border-radius: 999rpx;">取消</button>
+					</view>
 					<view class="margin-left-sm" v-if="item.status===2">
-						<u-button type="primary" text="查看物流"
-							@click.native.stop="$globalJump2View('/pages/my/integral_exchange_logs_logistics/integral_exchange_logs_logistics?id='+item.id, true)"
-							size="small" plain shape="circle"></u-button>
+						<button type="default" size="mini" @click="$globalJump2View('/pages/my/integral_exchange_logs_logistics/integral_exchange_logs_logistics?id='+item.id, true)" style="border-radius: 999rpx;">查看物流</button>
 					</view>
 				</view>
 
@@ -56,6 +60,62 @@
 			this.loadData()
 		},
 		methods: {
+			cancel(id){
+				axios.post('/api/v1/user/integral/cancel_gift_exchange_logs', {id}).then(res => {
+					uni.showToast({
+						title: res.info,
+						icon: res.code === 1 ? 'success' : 'none',
+						duration: 1200
+					})
+					if (res.code === 1) {
+						let index = this.list.findIndex(item => item.id === id)
+						if (index !== -1) {
+							setTimeout(() => {
+								this.$set(this.list[index], 'status', 0)
+							}, 1200)
+						}
+					}
+				}).catch(error => {
+					uni.showToast({
+						title: "出错了,请稍后重试",
+						icon: 'none',
+						duration: 1200
+					})
+				})
+			},
+			remove(id){
+				uni.showModal({
+					title: '提示',
+					content: '删除后数据无法找回，是否确认？',
+					success:red => {
+						if(red.confirm) {
+							axios.post('/api/v1/user/integral/remove_gift_exchange_logs', {id}).then(res => {
+								uni.showToast({
+									title: res.info,
+									icon: res.code === 1 ? 'success' : 'none',
+									duration: 1200
+								})
+								if (res.code === 1) {
+									let index = this.list.findIndex(item => item.id === id)
+									if (index !== -1) {
+										setTimeout(() => {
+											this.list.splice(index, 1)
+											this.$forceUpdate()
+										}, 1200)
+									}
+								}
+							}).catch(error => {
+								uni.showToast({
+									title: "出错了,请稍后重试",
+									icon: 'none',
+									duration: 1200
+								})
+							})
+						}
+					}
+				})
+				
+			},
 			loadData() {
 				if (this.status !== 'loadmore') {
 					return false
