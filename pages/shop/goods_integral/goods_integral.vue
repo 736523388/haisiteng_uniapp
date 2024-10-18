@@ -35,13 +35,16 @@
 							<view class="text-sm" style="height: 60rpx;line-height: 30rpx;overflow: hidden;">
 								<u--text :lines="2" :text="item.name" size="24rpx"></u--text>
 							</view>
-							<view style="margin-top: 10rpx;"><text class="text-xs"
-									style="margin-right: 6rpx;">¥</text><text
-									class="text-df">{{item.price_selling}}</text>
-								<block v-if="item.integral_num > 0">
-									<text class="text-xs">起</text><text class="text-xs" style="margin: 0 6rpx;">+</text>
-									<text>{{item.integral_num}}积分</text>
-								</block>
+							<view style="margin-top: 10rpx;">
+								<text v-if="item.price_selling !== '0.00'" class="text-xs" style="margin-right: 6rpx;">¥</text>
+								<text v-if="item.price_selling !== '0.00'" class="text-df">{{item.price_selling}}</text>
+								<text v-if="item.price_selling === '0.00'" class="text-df">{{item.integral_num}}积分</text>
+								<text class="text-xs">起</text>
+								<!-- <block v-if="item.integral_num > 0">
+									<text class="text-xs">起</text> -->
+									<!-- <text class="text-xs" style="margin: 0 6rpx;">+</text>
+									<text>{{item.integral_num}}积分</text> -->
+								<!-- </block> -->
 							</view>
 						</view>
 					</navigator>

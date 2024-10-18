@@ -1,7 +1,7 @@
 <template>
 
 	<view class="page-body switch-tab">
-		<!-- <view style="position: absolute;top: 0;left: 0;right: 0;">
+		<view style="position: absolute;top: 0;left: 0;right: 0;">
 			<image src="https://hst-default.oss-cn-chengdu.aliyuncs.com/images/home_bg.png" mode="aspectFill"
 				style="width:100%;height: 500rpx;" />
 		</view>
@@ -25,22 +25,16 @@
 						</view>
 					</view>
 
-					<block v-if="is_login">
-						<view style="margin-left: 30rpx;"
-							@click="$globalJump2View('/pages/my/userinfo/userinfo', true)">
-							<view class="userinfo-username text-xl">{{userinfo.vip_name || '游客'}} |
-								{{userinfo.nickname || '微信用户'}}
+						<view v-if="is_login" class="margin-left" @click="$globalJump2View('/pages/my/userinfo/userinfo', true)">
+							<view class="userinfo-username text-xl">{{userinfo.vip_name || '游客'}} | {{userinfo.nickname || '微信用户'}}
 							</view>
 							<view class="text-sm" style="margin-top: 10rpx;">ID：{{userinfo.idstr}}</view>
 							<view style="margin-top: 10rpx;" class="text-desc text-xs">完善个人信息></view>
 						</view>
-					</block>
-					<block v-else>
-						<view style="margin-left: 30rpx;" @click="$globalJump2View('/pages/login/login')">
+						<view v-else class="margin-left" @click="$globalJump2View('/pages/login/login')">
 							<view class="userinfo-username text-xl">点击注册/登录</view>
 							<view style="margin-top: 40rpx;"></view>
 						</view>
-					</block>
 				</view>
 			</view>
 			<view class="brand-desc text-sm" style="letter-spacing: 0.075em;font-weight: bold;">{{brand_desc}}</view>
@@ -60,9 +54,22 @@
 					</view>
 				</view>
 			</scroll-view>
-		</view> -->
+		</view>
 		
-		<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="default" field="desc" :dotsStyles="dotsStyles">
+		<view class="container menu-card" v-for="(item, index) in page_decoration" :key="item.hero">
+			<view style="background-color: #fff;">
+				<image mode="aspectFill" :src="item.hero" :key="item.title" style="height: 290rpx;width:290rpx;" />
+			</view>
+			<view class="content">
+				<view class="title text-df">{{item.title}}</view>
+				<view class="desc text-df" style="margin-top: 10rpx;">{{item.desc}}</view>
+				<view class="btn" style="margin-top: 31rpx;">
+					<u-button type="primary" size="small" @click="decorationClick(index)">{{item.btn_text}}</u-button>
+				</view>
+			</view>
+		</view>
+		
+		<!-- <uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="default" field="desc" :dotsStyles="dotsStyles">
 		<swiper style="height: 1125rpx;" circular :autoplay="true"
 			interval="5000" duration="500" @change="swiperChange">
 			<swiper-item v-for="(item, index) in sliderInfo" :key="item.id">
@@ -80,9 +87,9 @@
 			<view style="width: 100%;" @click="adClick(item)">
 				<image mode="widthFix" :src="item.cover" style="width: 100%;" />
 			</view>
-		</view>
+		</view> -->
 		
-		<view class="container bg-white padding-lr-sm padding-tb" @click="adBottomClick(index_banner[0].rule)">
+		<!-- <view class="container bg-white padding-lr-sm padding-tb" @click="adBottomClick(index_banner[0].rule)">
 			<view class="flex align-center">
 				<view style="flex: 1;">
 					<view class="text-lg text-bold">探索背后的故事</view>
@@ -100,9 +107,9 @@
 				</view>
 			</view>
 		</view>
-		<view style="height: 50rpx;"></view>
+		<view style="height: 50rpx;"></view> -->
 		
-		<!-- <view class="container banner">
+		<view class="container banner">
 			<view class="container-bar text-xl" style="font-weight: 500;">
 				探索背后的故事
 			</view>
@@ -117,7 +124,7 @@
 					</view>
 				</swiper-item>
 			</swiper>
-		</view> -->
+		</view>
 		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
 	</view>
 
@@ -137,7 +144,21 @@
 				current: 0,
 				defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
 				brand_desc: '在海丝腾门店或线上渠道购买任意产品，即可升级为尊贵会员，获得丰富尊享礼遇。',
-				
+				top_menu: [{
+					url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%BA%8A%E5%85%B71634107333713.png',
+					title: '我的床具',
+					path: '/pages/my/my_beds/my_beds'
+				},
+				{
+					url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E5%85%BB%E6%8A%A4%E4%B8%AD%E5%BF%831634107335313.png',
+					title: '预约保养',
+					path: '/pages/index/maintenance_service/maintenance_service'
+				},
+				{
+					url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%8D%A1%E5%88%B81634107335923.png',
+					title: '会员福利',
+					path: '/pages/index/coupon/coupon'
+				}],
 			}
 		},
 		computed: {
