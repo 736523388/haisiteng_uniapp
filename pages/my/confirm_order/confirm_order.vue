@@ -38,14 +38,14 @@
 				<view class="flex" v-for="(item,index) in goods_list" :key="item.id">
 					<image style="width: 200rpx;height: 200rpx;border-radius: 20rpx;" mode="aspectFill"
 						:src='item.goods_cover'></image>
-					<view class="margin-left" style="width: 470rpx;">
-						<view class=""><text v-if="item.activity_title != null" class="text-white margin-right-xs"
-								style="background-color: #e43d33;border:1px solid #e43d33;padding: 1px 3px;border-radius: 2px;font-size: 12px;
-">{{item.activity_title}}</text>{{item.goods_name}}</view>
-						<view class="text-gray text-sm">{{item.goods_spec_alias}}</view>
+					<view class="margin-left" style="flex: 1;">
+						<view class="">{{item.goods_name}}</view>
+						<view class="text-sm">{{item.goods_spec_alias}}</view>
 						<view class="margin-top">
-							<text v-if="item.price_market != item.price_real" class="text-xs text-gray" style="text-decoration: line-through;"><text class="text-sm">￥{{item.price_market}}</text></text>
-							<text class="text-xs">￥<text class="text-df">{{item.price_real}}</text></text>
+							
+							<text class="text-df">￥<text class="text-df">{{item.price_real}}</text></text>
+							<text v-if="item.price_market != item.price_real" class="text-sm margin-left-xs" style="text-decoration: line-through;opacity: .7;">
+								￥{{item.price_market}}</text>
 							<text class="margin-left-xs"> x {{item.stock_sales}}</text>
 						</view>
 					</view>
@@ -56,7 +56,7 @@
 					<u-cell title="商品总额" :border="false" :value="'￥'+total.amount_goods"></u-cell>
 					<u-cell v-if="total.activity_discount_amount_total != '0.00'" title="活动优惠" :border="false">
 						<template slot="value">
-							<view class="text-df text-red">-￥{{total.activity_discount_amount_total}}</view>
+							<view class="text-df">-￥{{total.activity_discount_amount_total}}</view>
 						</template>
 						<template slot="right-icon">
 							<view class="text-df" @click.native.stop="show_activity_discount=!show_activity_discount">
@@ -70,7 +70,7 @@
 								<view class="text-sm">{{item.goods_name}}</view>
 							</template>
 							<template slot="value">
-								<view class="text-df text-red">-￥{{item.activity_discount_amount_total}}</view>
+								<view class="text-df">-￥{{item.activity_discount_amount_total}}</view>
 							</template>
 						</u-cell>
 					</view>
@@ -111,7 +111,7 @@
 						</view>
 					</u-cell>
 					<view style="text-align: right;padding: 20rpx 30rpx;">合计：<text
-							class="text-red">￥{{total.amount_real}}</text></view>
+							class="">￥{{total.amount_real}}</text></view>
 				</u-cell-group>
 			</view>
 			<view class="bg-white container padding-xs margin-bottom-sm" style="border-radius: 12rpx;">

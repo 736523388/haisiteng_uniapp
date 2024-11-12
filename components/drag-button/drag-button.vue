@@ -143,7 +143,7 @@
 		border-radius: 50%;
 		font-size: $uni-font-size-sm;
 		position: fixed;
-		z-index: 999999;
+		z-index: 888;
 		
 		&.transition {
 			transition: left .3s ease,top .3s ease;

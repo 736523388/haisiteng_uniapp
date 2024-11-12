@@ -24,18 +24,17 @@
 				</view>
 				<view class="flex flex-direction justify-between" style="height: 180rpx;width: 100%;">
 					<view class="goods-card-title">
-						<text><text v-if="item.activity_title" class="text-white margin-right-xs" style="background-color: #e43d33;border:1px solid #e43d33;padding: 1px 3px;border-radius: 2px;font-size: 12px;
-">{{item.activity_title}}</text>{{item.goods_title}}</text>
+						<text>{{item.goods_title}}</text>
 					</view>
 					<view class="padding-left-sm text-xs">{{item.goods_spec_alias}}<text v-if="item.stock < 10"
 							class="margin-left-xs text-gray">仅剩{{item.stock}}件</text></view>
 					<view class="goods-card-price">
 						<view>
 							<view>
-								<text class="margin-left-xs text-gray" style="text-decoration: line-through;"
+								<!-- <text class="goods-card-price-striking">¥</text> -->
+								<text class="goods-card-price-striking">¥{{item.price_selling}}</text>
+								<text class="margin-left-xs text-sm" style="text-decoration: line-through;opacity: .7;"
 									v-if="item.price_market != item.price_selling">¥{{item.price_market}}</text>
-								<text class="goods-card-price-striking text-red" style="font-size: 20rpx;">¥</text>
-								<text class="goods-card-price-striking text-red">{{item.price_selling}}</text>
 							</view>
 						</view>
 						<view @click.stop>
@@ -89,8 +88,8 @@
 				</view>
 				<view class="padding-right flex justify-end align-center" style="margin-left: auto;">
 					<view v-if="!showRemoveBtn">
-						<text>合计:<text class="text-xl text-red text-bold"><text
-									class="text-sm">￥</text>{{totalPrice}}</text></text>
+						<text>合计:<text class="text-xl text-bold"><text
+									class="text-sm">￥</text>{{totalPriceS}}</text></text>
 					</view>
 					<view v-if="!showRemoveBtn">
 						<u-button @click.native="topay" custom-style="width: 100rpx;margin-left: 12rpx;" size="small"
@@ -135,7 +134,7 @@
 			return {
 				carts: [],
 				invalid: [],
-				totalPrice: 0,
+				totalPrice: '',
 				selectAllStatus: false,
 				loaded: false,
 				loading: false,
@@ -148,7 +147,10 @@
 			}),
 			...mapGetters({
 				is_login: 'user/is_login',
-			})
+			}),
+			totalPriceS(){
+				return this.totalPrice.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+			}
 		},
 		onShow() {
 			console.log('当前购物车数量', this.goods_cart_number)
@@ -212,7 +214,6 @@
 						let carts = res.data.list
 						for (let k in carts) {
 							carts[k].selected = false
-							// carts[k].slideviewShow = false
 						}
 						this.carts = carts
 						this.getTotalPrice();
@@ -228,7 +229,7 @@
 					if (this.carts[k].selected === true) {
 						// totalPrice += this.carts[k].goods_number * this.carts[k].price_selling
 						totalPrice = Calc.Add(totalPrice, Calc.Mul(this.carts[k].goods_number, this.carts[k]
-							.price_selling))
+							.price_selling,2),2)
 					}
 				}
 				this.totalPrice = totalPrice.toFixed(2)
@@ -286,7 +287,7 @@
 				} else {
 					uni.showModal({
 						title: '提示',
-						content: '确定移除购物车?',
+						content: '确定从购物袋移除?',
 						// showCancel: true,
 						// cancelText: "取消",
 						// cancelColor: '#000000',
@@ -507,7 +508,7 @@
 
 	.goods-card-price-striking {
 		/* color: #DC2626; */
-		font-weight: 600;
+		// font-weight: 600;
 		font-size: 28rpx;
 		padding-left: 6rpx;
 	}

@@ -1216,3 +1216,7 @@ image {
 .lines-white {
   color: var(--white);
 }
+
+.opacity_5 {
+	opacity: .5;
+}

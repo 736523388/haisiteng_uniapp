@@ -1,122 +1,99 @@
 <template>
-	<view class="bg-white">
-		<u-toast ref="uToast"></u-toast>
+	<view>
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
 			<!-- 轮播图 -->
-			<uni-swiper-dot class="uni-swiper-dot-box" :info="sliderInfo" :current="current" mode="nav" field="content">
-			<swiper class="screen-swiper square-dot" circular :autoplay="detail.video == ''"
-				interval="5000" duration="500" @change="swiperChange">
-				<swiper-item v-if="detail.video != ''">
-					<video style="width: 100%;" :src="detail.video" autoplay loop muted :show-play-btn="false"
-						:controls="false" object-fit="cover"></video>
-				</swiper-item>
-				<swiper-item v-for="(item, index) in detail.slider" :key="item">
-					<view @click="showPreviewImage(index)">
-						<image style="width: 100%;" :src="item" mode="widthFix"></image>
-					</view>
-				</swiper-item>
-			</swiper>
-			</uni-swiper-dot>
-			<view class="bg-white padding-sm">
-				<view class="text-bold margin-left-xs text-sm flex">
-					<view class="margin-right-sm" v-if="detail.price_market != detail.price_selling">原价<text class="text-lighter">￥</text><text class="text-xl">{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text></view>
-					<view style="color: #e43d33;">销售价<text class="text-lighter">￥</text><text class="text-xl">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text></view>
-				</view>
-				<view class="margin-left-xs margin-top-sm text-bold">{{detail.name}}</view>
-				<!-- <view class="margin-top-xs flex align-center">
-					<view style="text-decoration: line-through;" v-if="detail.price_market != detail.price_selling">
-						<text
-							class="text-lg margin-left-xxs text-gray">¥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text>
-					</view>
-					<view class="margin-left-xs">
-						<text
-							class="text-lg margin-left-xxs text-red">¥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
-					</view>
-					<text class="text-sm margin-left-xxs" v-if="!checkspec.id">起</text>
-					<text class="margin-left-xxs"
-						v-if="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
-					<view class="text-sm margin-left-xxs"> / 件</view>
-				</view> -->
+			<view class="goods-swiper-box">
+				<swiper class="screen-swiper square-dot" circular :autoplay="detail.video == ''" interval="5000"
+					duration="500" @change="swiperChange">
+					<swiper-item v-for="(item, index) in sliderInfo" :key="item.url">
+						<video v-if="item.type == 'video'" style="width: 100%;" :src="item.url" autoplay loop muted
+							:show-play-btn="false" :controls="false" object-fit="cover"></video>
+						<view v-if="item.type == 'image'" @click="showPreviewImage(item.url)">
+							<image style="width: 100%;" :src="item.url" mode="widthFix"></image>
+						</view>
+					</swiper-item>
+				</swiper>
+				<view class="goods-swiper-dot">{{current+1}}/{{sliderInfo.length}}</view>
+			</view>
 
-				<!-- <view class="">{{checkspec.goods_spec_alias}}</view> -->
-				<view class="text-sm text-desc">{{detail.remark}}</view>
-			</view>
-			<view v-if="detail.activity_title" class="padding-sm margin-left-xs flex align-center">
-				<view>促销</view>
-				<view class="margin-left-sm margin-right-xs">
-					<uni-tag :text="detail.activity_title" custom-style="background-color: #fff; border-color: #e43d33; color: #e43d33;padding:1px 1px;"></uni-tag>
+			<view class="bg-white padding-lr padding-tb-sm">
+				<view class="margin-top-sm text-bold text-lg">{{detail.name}}</view>
+				<view class="flex justify-between align-center margin-top-sm">
+					<view class="text-bold text-sm flex" style="align-items: baseline;">
+						<view class="margin-right-sm text-lg text-lighter">
+							<text>￥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
+						</view>
+						<view v-if="detail.price_market != detail.price_selling" class="flex align-center text-lighter" style="padding: 4rpx 10rpx;border-radius: 999rpx;opacity: .7;text-decoration: line-through;">
+							<text>原价￥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text>
+						</view>
+					</view>
+					<!-- <view style="opacity: .5;">已售{{detail.stock_total_txt}}</view> -->
 				</view>
-				<view>{{detail.activity_desc}}</view>
+				<view class="text-sm margin-top-sm goods-integral" v-if="detail.integral_num > 0">积分可抵扣￥{{detail.integral_price}}</view>
+				
+				
 			</view>
+			<!-- <view class="flex align-center justify-between bg-white margin-top-xs padding-lr padding-tb-sm" @click="showSpecModal">
+				<view>当前选择</view>
+				<view class="flex align-center" :class="{'opacity_5':!checkspec.price_selling}">
+					<view>{{ checkspec.price_selling ? checkspec.goods_spec_alias:'选择规格' }}</view>
+					<view class="margin-left-xs">＞</view>
+				</view>
+			</view> -->
+			<view class="margin-top-sm text-center" style="opacity: .7;">一 详情 一</view>
 			<view class="margin-top-sm" style="padding-bottom: 160rpx;">
 				<rich-text style="font-size: 0;" :nodes="detail.content"></rich-text>
 			</view>
 		</view>
+		<!-- 固定在底部的菜单栏 -->
 		<view class="bg-white flex align-center"
-			style="position: fixed;bottom: 0;width: 100%;padding-bottom: env(safe-area-inset-bottom);z-index: 10080;">
+			style="position: fixed;bottom: 0;width: 100%;padding-bottom: env(safe-area-inset-bottom);z-index: 888;">
 			<view style="position: relative;width: 100rpx;padding: 10rpx 0;">
 				<button class="u-reset-button custom-button" open-type="contact" hover-class="bg-gray">
-					<u-icon name="chat" size="52rpx" label="客服" labelPos="bottom" labelSize="20rpx" space="0"></u-icon>
+					<uni-icons type="chat" size="36"></uni-icons>
 				</button>
 			</view>
 			<view style="position: relative;width: 100rpx;padding: 10rpx 0;">
-				<button @click.native="gotoShopCart" class="u-reset-button custom-button" hover-class="bg-gray"><u-icon
-						name="shopping-cart" size="52rpx" label="购物车" labelPos="bottom" labelSize="20rpx"
-						space="0"></u-icon></button>
+				<button @click="gotoShopCart" class="u-reset-button custom-button" hover-class="bg-gray">
+						<uni-icons type="cart" size="36"></uni-icons>
+				</button>
 				<u-badge numberType="ellipsis" :max="99" bgColor="#fa3534" type="error" :value="goods_cart_number"
-					:offset="[0,2]" absolute></u-badge>
+					:offset="[2,2]" absolute></u-badge>
 			</view>
-			<view style="flex: 1;padding: 10rpx;">
-				<view style="border: none;display: inline-block;width: 50%;">
-					<u-button type="primary" text="加入购物车" color="#0B1839"
-						:custom-style="{'border-radius':'999px 0 0 999px'}" :data-index="1"
-						@click.native="showSpecModal"></u-button>
+			<view class="flex justify-around flex-sub align-center" style="flex: 1;padding: 10rpx;margin-left: 10px;">
+				<view style="width: 45%;">
+					<button type="default" :plain="true" hover-class="none" @click="showSpecModal" :data-index="1" style="font-size: 14px;padding-left: 10px;padding-right: 10px;opacity: .7;">放入购物袋</button>
 				</view>
-				<view style="border: none;display: inline-block;width: 50%;">
-					<u-button type="primary" text="立即购买" color="#000"
-						:custom-style="{'border-radius':'0 999px 999px 0'}" :data-index="2"
-						@click.native="showSpecModal"></u-button>
+				<view style="width: 45%;">
+					<button type="default" @click="showSpecModal" :data-index="2" style="color: #fff;background-color: #0B1839;font-size: 14px;padding-left: 10px;padding-right: 10px;">即刻购买</button>
 				</view>
 			</view>
 
 		</view>
+		<!-- 弹出层部分 -->
 		<uni-popup ref="spec_popup" type="bottom" @change="onSpecPopupChange">
 			<!-- 选择规格 -->
-			<view class="spec-box bg-white"
-				style="padding: 30rpx 30rpx 120rpx 30rpx;margin-bottom: env(safe-area-inset-bottom);">
-				<view class="flex align-center">
-					<u-image :src="detail.cover" height="224rpx" width="224rpx" />
-					<view class="flex padding-right-xl margin-left-sm flex-direction justify-end"
-						style="height: 224rpx;">
-						<view style="margin-bottom: auto;">{{detail.name}}</view>
-						<view class="flex align-center">
-							<view class="text-lg" style="text-decoration: line-through;">
-								¥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}
-							</view>
-							<view class="text-lg margin-left-xs text-red">
-								¥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}
-							</view>
-							<text class="text-sm margin-left-xxs" v-if="!checkspec.id">起</text>
-							<text class="margin-left-xxs"
-								v-if="(checkspec.id && checkspec.integral_num > 0) || detail.integral_num > 0">+{{checkspec.integral_num ? checkspec.integral_num : detail.integral_num}}积分</text>
-							<text class="text-sm margin-left-xxs"> / 件</text>
-
-
-						</view>
-						<view>
-							<text
-								class="text-sm text-desc">剩余{{checkspec.id ? (checkspec.stock_total - checkspec.stock_sales) : (detail.stock_total-detail.stock_sales)}}件</text>
+			<view class="spec-box bg-white">
+				<view class="spec-box-line"></view>
+				<view class="flex align-center margin-top-xl" style="height: 160rpx;">
+					<view style="width: 160rpx;height: 100%;">
+						<image :src="checkspecImage != '' ? checkspecImage : detail.cover" mode="scaleToFill" style="width: 100%;height: 100%;"></image>
+					</view>
+					<view class="flex margin-left flex-direction justify-end flex-sub"
+						style="height: 100%;">
+						<view style="margin-bottom: auto;letter-spacing: 2rpx;">{{detail.name}}</view>
+						<view class="margin-left-xs text-lighter">
+							<text>¥</text><text style="margin-left: 4rpx;">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
 						</view>
 					</view>
 				</view>
-				<view v-for="(item, index) in detail.specs" :key="item.spec" style="margin-top: 8rpx;">
-					<view class="text-lg" v-if="detail.specs && detail.specs.length > 0">
+				<view class="margin-top" v-for="(item, index) in detail.specs" :key="item.spec">
+					<view v-if="detail.specs && detail.specs.length > 0">
 						{{detail.specs.length == 1 ? '选择规格': item.name}}
 					</view>
-					<view class="flex flex-wrap"
-						v-if="(detail.specs && detail.specs.length > 0) || item.list.length > 1"
-						style="margin-top: 8rpx;">
+					<view class="flex flex-wrap margin-top"
+						v-if="(detail.specs && detail.specs.length > 0) || item.list.length > 1">
 						<view class="spec_item text-df"
 							:class="{active: value.is_seleted === true, 'disabled': value.is_seleted !== true && value.is_elective === false}"
 							:data-key1="index" :data-key2="key" @click='setSpecSeleted' v-for="(value,key) in item.list"
@@ -126,15 +103,14 @@
 					</view>
 				</view>
 				<view class="flex align-center margin-tb-sm justify-between">
-					<view class="text-lg">数量</view>
+					<view>数量</view>
 					<view @click.stop>
-						<u-number-box v-model="Num" @change="onNumChange" :min="1" :max="maxNum" integer
+						<u-number-box v-model="goods_number" @change="onNumChange" :min="1" :max="maxNum" integer
 							:button-size="24"></u-number-box>
 					</view>
 				</view>
 			</view>
 		</uni-popup>
-		<drag-button :isDock="true" :existTabBar="true" />
 	</view>
 </template>
 
@@ -155,19 +131,22 @@
 				loaded: false,
 				detail: {},
 				checkspec: {},
+				checkspecImage: '',
 				showSpecFlag: false,
-				Num: 1,
+				goods_number: 1,
 				checkSpecArr: [],
 				sliderInfo: [],
 				current: 0,
-				swiperDotIndex: 0
 			}
 		},
 		computed: {
 			...mapState({
+				// 购物车商品数量
 				goods_cart_number: state => state.goods_cart.goods_cart_number,
+				// 用户信息
 				userinfo: state => state.user.userinfo
 			}),
+			// 最大数量
 			maxNum() {
 				if (this.checkspec.id) {
 					return this.checkspec.stock_total - this.checkspec.stock_sales
@@ -178,9 +157,11 @@
 		},
 		onLoad(options) {
 			console.log(options)
+			// 保存推荐来源
 			if (options.uid) {
 				uni.setStorageSync('pid', options.uid)
 			}
+			// 场景值处理 推广二维码来源
 			if (options.scene) {
 				const scene = decodeURIComponent(options.scene)
 				console.log(scene)
@@ -194,17 +175,15 @@
 						this.channel = scene_arr_2[1]
 						uni.setStorageSync('channel', this.channel)
 					}
-					this.loadData(this.aid)
 				})
-
 			} else {
 				this.channel = options.channel || ''
 				if (this.channel) {
 					uni.setStorageSync('channel', this.channel)
 				}
 				this.aid = options.id
-				this.loadData(options.id)
 			}
+			this.loadData(this.aid)
 
 
 		},
@@ -221,10 +200,11 @@
 			}
 		},
 		methods: {
-			swiperChange(e){
+			swiperChange(e) {
 				this.current = e.detail.current
 			},
-			showPreviewImage(index) {
+			showPreviewImage(url) {
+				let index = this.detail.slider.findIndex(item => item == url)
 				uni.previewImage({
 					current: index,
 					urls: this.detail.slider,
@@ -261,7 +241,7 @@
 					axios.post("/api/v1/user/goods/cart/add", {
 						goods_id: this.aid,
 						goods_spec: this.checkspec.goods_spec,
-						goods_number: this.Num,
+						goods_number: this.goods_number,
 						goods_title: this.detail.name,
 						goods_cover: this.detail.cover
 					}).then(res => {
@@ -299,7 +279,7 @@
 							url: '/pages/my/confirm_order/confirm_order?use_integral=' +
 								available_integral +
 								'&key=' +
-								this.aid + '@' + this.checkspec.goods_spec + '@' + this.Num
+								this.aid + '@' + this.checkspec.goods_spec + '@' + this.goods_number
 						})
 					} else {
 						uni.showToast({
@@ -334,33 +314,33 @@
 					console.log(res)
 					if (res.code === 1) {
 						this.detail = res.data
-						const sliderInfo = res.data.slider.map((item,index) => {
+						const sliderInfo = res.data.slider.map((item, index) => {
 							return {
 								type: 'image',
-								url: item,
-								content: ''
+								url: item
 							}
 						})
-						if(res.data.video != '') {
+						if (res.data.video != '') {
 							sliderInfo.unshift({
 								type: 'video',
-								url: 'res.data.video',
-								content: ''
+								url: res.data.video
 							})
 						}
-						console.log(sliderInfo)
 						this.sliderInfo = sliderInfo
-						const specs = [...res.data.specs]
+						// 商品规格处理
+						const specs = res.data.specs
 						specs.forEach((v, vk) => {
 							this.checkSpecArr[vk] = ""
-							v.list.forEach((t, tk) => {
-								t = Object.assign(t, {
+							v.has_image = v.has_image || false
+							for(let tk in v.list) {
+								v.list[tk] = Object.assign(v.list[tk], {
 									is_seleted: false,
-									is_elective: this.checkIsElective(v.name + '::' + t
+									is_elective: this.checkIsElective(v.name + '::' + v.list[tk]
 										.name)
 								})
-							})
+							}					
 						})
+						// this.specChanged()
 						this.$nextTick(() => {
 							this.loaded = true
 						})
@@ -371,14 +351,22 @@
 			},
 			gotoShopCart() {
 				console.log('跳转到购物车')
-				let params = {url: '/pages/shopCart/shopCart', success: res => {console.log(res)},fail: err => {console.log(err)}}
+				let params = {
+					url: '/pages/shopCart/shopCart',
+					success: res => {
+						console.log(res)
+					},
+					fail: err => {
+						console.log(err)
+					}
+				}
 				console.log(params)
 				try {
 					uni.reLaunch(params)
-				} catch(error) {
+				} catch (error) {
 					console.log(error)
 				}
-				
+
 			},
 			onNumChange(event) {
 				console.log('当前值为: ' + event.value)
@@ -406,21 +394,32 @@
 			},
 			specChanged(i, j) {
 				let specs = this.detail.specs
+				console.log(specs)
+				let currentGroup = specs[i]
+				console.log(currentGroup)
 				let currentSpec = specs[i].list[j];
 
 				//如果点击项不可点击 则打断不往下执行
 				if (currentSpec.is_elective === false) {
 					return false
 				}
-				console.log(currentSpec)
+				
 				currentSpec.is_seleted = !currentSpec.is_seleted
-
+				console.log(currentSpec)
 				if (currentSpec.is_seleted === true) {
 					this.checkSpecArr[i] = currentSpec.group + '::' + currentSpec.name
+					if(currentGroup.has_image) {
+						this.checkspecImage = currentSpec.image || ''
+					}
+					
 				} else {
 					this.checkSpecArr[i] = ''
+					if(currentGroup.has_image) {
+						this.checkspecImage = ''
+					}
 				}
-				console.log(this.checkSpecArr)
+				console.log('checkSpecArr', this.checkSpecArr)
+				console.log('checkspecImage', this.checkspecImage)
 				specs[i].list.forEach((v, vk) => {
 					if (vk !== j) {
 						v.is_seleted = false
@@ -443,7 +442,6 @@
 						})
 					}
 				})
-				console.log(specs)
 				specs[i].list[j] = currentSpec
 				this.detail.specs = [...specs]
 				let checked = true
@@ -463,7 +461,6 @@
 							}
 						})
 						if (is_check === true) {
-							specitem = this.goods_spec_alias(specitem)
 							this.checkspec = specitem
 						}
 					})
@@ -472,16 +469,53 @@
 				}
 				console.log(this.detail)
 				console.log(this.checkspec)
-				this.Num = 1
+				this.goods_number = 1
 			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.screen-swiper {
-		min-height: 735rpx;
+	.goods-swiper-box {
+		height: 735rpx;
+		position: relative;
+
+		.goods-swiper-dot {
+			position: absolute;
+			bottom: 10rpx;
+			right: 10rpx;
+			background-color: #e8e8e8;
+			padding: 4rpx 16rpx;
+			border-radius: 999rpx;
+			font-size: 20rpx;
+		}
+		.screen-swiper {
+			min-height: 735rpx;
+		}
 	}
+	
+	.goods-integral{
+		background-color: #0B1839;
+		color: #fff;
+		display: inline-block;
+		padding: 0 10rpx;
+		border-radius: 6rpx;
+	}
+	
+	.spec-box{
+		padding: 10rpx 40rpx 120rpx 40rpx;
+		margin-bottom: env(safe-area-inset-bottom);
+		border-radius: 20px 20px 0 0;
+		
+		.spec-box-line{
+			width: 40px;
+			border-bottom: 3px solid #000;
+			margin: 0 auto;
+			opacity: .5;
+		}
+	}
+
+	
 
 	.spec_item {
 		// border: 1px solid #000;

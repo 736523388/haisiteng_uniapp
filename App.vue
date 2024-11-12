@@ -6,16 +6,6 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			wx.loadFontFace({
-				global: true,
-			  family: 'Bitstream Vera Serif Bold',
-			  source: 'url("https://res.wx.qq.com/t/wx_fed/base/weixin_portal/res/static/font/33uDySX.ttf")',
-			  success() {console.log('success')},
-			  fail: (error) => {
-			  	console.log(error)
-			  }
-			})
-			console.log(2222)
 			axios.get('/api/v1/ad?position=shop_index_top').then(res => {
 				if(res.code === 1){
 					this.$store.commit('global/update_shop_index_background', {
@@ -27,7 +17,7 @@
 				this.$store.commit('global/update_banner', {
 					banner: res.data
 				})
-			})
+			}).catch(error => {})
 			axios.get('/api/v1/ad?position=home_top').then(res => {
 				if(res.code === 1){
 					this.$store.commit('global/update_ad', {
@@ -45,6 +35,7 @@
 			axios.get("/api/v1/common").then(res => {
 				this.$store.commit('global/update_common', res.data)
 			})
+			// 在登录时获取购物车数量
 			if (this.$store.getters['user/is_login']) {
 				axios.get('/api/v1/user/goods/cart_num').then(res => {
 					if (res.code === 1) {

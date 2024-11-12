@@ -30,8 +30,8 @@
 													type="error"></uni-tag>
 											</view>
 											<view class="margin-top-sm padding-bottom-xs flex align-center">
-												<!-- <text class="text-xs margin-lr-xs">¥</text> -->
-												<text class="text-df">¥{{item.price_selling}}</text>
+												<text class="text-df" style="margin-right: 6rpx;">¥</text>
+												<text class="text-df">{{item.price_selling}}</text>
 											</view>
 											<!-- <view class="text-sm text-gray">剩余{{item.stock_total - item.stock_sales}}件</view> -->
 										</view>
