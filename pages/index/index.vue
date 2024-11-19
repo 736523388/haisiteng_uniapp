@@ -43,7 +43,7 @@
 			</view>
 		</view>
 
-		<view class="container margin-top">
+		<view class="container margin-top-xl">
 			<scroll-view scroll-x style="white-space:nowrap;">
 				<view class="scroll_box" v-for="item in top_menu" :key="item.title"
 					@click="$globalJump2View(item.path, true)">
@@ -61,10 +61,11 @@
 				<image mode="aspectFill" :src="item.hero" :key="item.title" style="height: 290rpx;width:290rpx;" />
 			</view>
 			<view class="content">
-				<view class="title text-df">{{item.title}}</view>
+				<view class="title text-df text-bold">{{item.title}}</view>
 				<view class="desc text-df" style="margin-top: 10rpx;">{{item.desc}}</view>
 				<view class="btn" style="margin-top: 31rpx;">
-					<u-button type="primary" size="small" @click="decorationClick(index)">{{item.btn_text}}</u-button>
+					<button type="default" @click="decorationClick(index)" style="background-color: #000030;color: #fff;font-size: 14px;line-height: 1.78;border-radius: 2px;">{{item.btn_text}}</button>
+					<!-- <u-button type="primary" size="small" @click="decorationClick(index)" :text="item.btn_text"></u-button> -->
 				</view>
 			</view>
 		</view>
@@ -108,9 +109,8 @@
 			</view>
 		</view>
 		<view style="height: 50rpx;"></view> -->
-		
 		<view class="container banner">
-			<view class="container-bar text-xl" style="font-weight: 500;">
+			<view class="container-bar text-lg text-bold">
 				探索背后的故事
 			</view>
 			<swiper class="screen-swiper square-dot" :indicator-dots="true" :circular="true" :autoplay="true"
@@ -119,8 +119,8 @@
 					:data-index="index">
 					<view style="height: 100%;">
 						<image :src="item.img" mode="aspectFill"></image>
-						<view class="title text-xl text-center">{{item.name}}</view>
-						<view class="text-sm text-center">{{item.desc}}</view>
+						<view class="title text-bold text-center">{{item.name}}</view>
+						<view class="text-sm text-bold text-center">{{item.desc}}</view>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -154,11 +154,12 @@
 					title: '预约保养',
 					path: '/pages/index/maintenance_service/maintenance_service'
 				},
-				{
-					url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%8D%A1%E5%88%B81634107335923.png',
-					title: '会员福利',
-					path: '/pages/index/coupon/coupon'
-				}],
+				// {
+				// 	url: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/%E6%88%91%E7%9A%84%E5%8D%A1%E5%88%B81634107335923.png',
+				// 	title: '会员福利',
+				// 	path: '/pages/index/coupon/coupon'
+				// },
+				],
 			}
 		},
 		computed: {
@@ -222,6 +223,18 @@
 				console.log(e)
 			},
 			decorationClick(index) {
+				// if(index === 1) {
+				// 	wx.openChannelsUserProfile({
+				// 		finderUserName: 'sphw3hmD3d4gIob',
+				// 		success:res => {
+				// 			console.log(res)
+				// 		},
+				// 		fail: error => {
+				// 			console.log(error)
+				// 		}
+				// 	})
+				// 	return
+				// }
 				let url
 				switch (index) {
 					case 0:
@@ -361,10 +374,10 @@
 	}
 
 	.menu-card>.content {
-		padding-left: 50rpx;
+		padding-left: 40rpx;
 		height: 100%;
-		padding-top: 37rpx;
-		padding-right: 10rpx;
+		padding-top: 30rpx;
+		padding-right: 30rpx;
 	}
 
 	.banner {
@@ -392,10 +405,10 @@
 
 	.scroll_box {
 		position: relative;
-		height: 300rpx;
-		width: 300rpx;
+		height: 320rpx;
+		width: 320rpx;
 		display: inline-block;
-		margin-right: 16rpx;
+		margin-right: 50rpx;
 	}
 
 	.scroll_box:last-child {

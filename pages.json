@@ -42,7 +42,7 @@
 			"path" : "pages/shop/index/index",
 			"style" : 
 			{
-				"navigationBarTitleText" : "精选配饰",
+				"navigationBarTitleText" : "海鸥说",
 				"enablePullDownRefresh" : false
 			}
 		},

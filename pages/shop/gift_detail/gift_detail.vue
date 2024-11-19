@@ -3,14 +3,18 @@
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
 			<!-- 轮播图 -->
-			<swiper class="screen-swiper square-dot" indicator-dots circular :autoplay="detail.video == ''"
-				interval="5000" duration="500" indicator-color="#6b7280" indicator-active-color="#374151">
-				<swiper-item v-for="(item, index) in detail.slider" :key="item">
-					<view @click="showPreviewImage(index)">
-						<image style="width: 100%;" :src="item" mode="widthFix"></image>
-					</view>
-				</swiper-item>
-			</swiper>
+			<!-- 轮播图 -->
+			<view class="goods-swiper-box">
+				<swiper class="screen-swiper square-dot" circular :autoplay="true" interval="5000"
+					duration="500" @change="swiperChange">
+					<swiper-item v-for="(item, index) in detail.slider" :key="item">
+						<view @click="showPreviewImage(index)">
+							<image style="width: 100%;" :src="item" mode="widthFix"></image>
+						</view>
+					</swiper-item>
+				</swiper>
+				<view class="goods-swiper-dot">{{current+1}}/{{detail.slider.length}}</view>
+			</view>
 			<view class="bg-white padding-sm">
 				<view>
 					<text class="margin-left-xs">{{detail.title}}</text>
@@ -46,7 +50,8 @@
 			return {
 				id: '',
 				loaded: false,
-				detail: {}
+				detail: {},
+				current: 0,
 			};
 		},
 		onLoad(options) {
@@ -73,10 +78,29 @@
 					indicator: 'number'
 				})
 			},
+			swiperChange(e) {
+				this.current = e.detail.current
+			},
 		}
 	}
 </script>
 
 <style lang="scss">
+.goods-swiper-box {
+		height: 735rpx;
+		position: relative;
 
+		.goods-swiper-dot {
+			position: absolute;
+			bottom: 10rpx;
+			right: 10rpx;
+			background-color: #e8e8e8;
+			padding: 4rpx 16rpx;
+			border-radius: 999rpx;
+			font-size: 20rpx;
+		}
+		.screen-swiper {
+			min-height: 735rpx;
+		}
+	}
 </style>

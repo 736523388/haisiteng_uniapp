@@ -346,11 +346,11 @@ image {
 }
 
 .margin-top-lg {
-  margin-top: 40rpx;
+  margin-top: 40rpx !important;
 }
 
 .margin-top-xl {
-  margin-top: 50rpx;
+  margin-top: 50rpx !important;
 }
 
 .margin-top-xxl {
