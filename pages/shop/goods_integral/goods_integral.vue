@@ -104,6 +104,12 @@
 				is_login: 'user/is_login',
 			})
 		},
+		onShareAppMessage: function(options) {
+			return {
+				title: "My Hastens",
+				path: 'pages/shop/goods_integral/goods_integral'
+			}
+		},
 		onLoad() {
 			const getGoods = axios.get('/api/v1/goods?is_integral=1')
 			const getGift = axios.get('/api/v1/integral/gift')
