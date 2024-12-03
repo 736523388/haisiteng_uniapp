@@ -3,21 +3,27 @@
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
 			<view class="bg-white margin-bottom-sm padding-tb-xs padding-lr-sm" v-for="item in list" :key="item.id">
-				<view>{{item.create_at}}</view>
-				<view class="flex">
+				<view>您于{{item.create_at}}兑换了</view>
+				<view class="flex margin-top-xs">
 					<view>
 						<image mode="aspectFill" style="height: 150rpx;width: 150rpx;" :src="item.gift.cover">
 						</image>
 					</view>
 					<view class="flex flex-direction" style="height: 150rpx;">
 						<view class="u-line-2 padding-tb-xs padding-lr-sm text-sm" style="max-height: 78rpx;">
-							{{item.gift.title}}
+							{{item.gift.title}} × {{item.number}}件
 						</view>
-						<view class="padding-tb-xs padding-lr-sm">
+						<!-- <view class="padding-tb-xs padding-lr-sm">
 							<view>
 								<text class="text-sm">数量：{{item.number}}</text>
 							</view>
+						</view> -->
+						<view class="padding-tb-xs padding-lr-sm text-sm flex align-center justify-start">
+							<text>{{item.address_name}}</text>
+							<u--text mode="phone" :text="item.address_phone" format="encrypt" size="28rpx"
+									margin="0 0 0 6rpx"></u--text>
 						</view>
+						<view class="padding-tb-xs padding-lr-sm text-sm">{{item.address_province}}{{item.address_city}}{{item.address_area}}{{item.address_content}}</view>
 					</view>
 				</view>
 				<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center" @click.stop>

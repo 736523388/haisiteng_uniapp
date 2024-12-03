@@ -62,7 +62,7 @@
 					</view>
 					<view style="padding: 10rpx;">
 						<view style="border: none;display: inline-block;">
-							<u-button :disabled="address_current_id === 0" type="primary" text="确认兑换" color="#000"
+							<u-button :disabled="address_current_id === 0 || orderLoading === true" type="primary" text="确认兑换" color="#000"
 								:custom-style="{'border-radius':'999px','width':'160rpx'}"
 								style="width: 160rpx;border-radius: 999px;" @click.native="receive"></u-button>
 						</view>
@@ -88,14 +88,9 @@
 				id: '',
 				loaded: false,
 				gift: {},
-				num: 1
+				num: 1,
+				orderLoading: false,
 			};
-		},
-		onLoad(options) {
-			this.id = options.id || id
-			checkLogin(() => {
-				this.loadData()
-			})
 		},
 		computed: {
 			total_integral_num() {
@@ -104,6 +99,12 @@
 			...mapGetters({
 				address_current: 'user_address/address_current',
 				address_current_id: 'user_address/address_current_id'
+			})
+		},
+		onLoad(options) {
+			this.id = options.id || id
+			checkLogin(() => {
+				this.loadData()
 			})
 		},
 		methods: {
@@ -118,6 +119,18 @@
 				})
 			},
 			receive() {
+				if (!this.address_current_id) {
+					uni.showToast({
+						title: '请选择收货地址',
+						icon: 'none'
+					})
+					return false
+				}
+				if (this.orderLoading !== false) {
+					return false
+				}
+				this.orderLoading = true
+				
 				let params = {
 					gift_id: this.id,
 					number: this.num,
@@ -138,6 +151,8 @@
 						setTimeout(() => {
 							uni.navigateBack()
 						}, 1200)
+					} else {
+						this.orderLoading = false
 					}
 				}).catch(error => {
 					uni.showToast({
@@ -145,6 +160,7 @@
 						icon: 'none',
 						duration: 1200
 					})
+					this.orderLoading = false
 				})
 			}
 		}

@@ -11,48 +11,23 @@
 					<view>
 						<video @play="videoPay" :id="'video_' + item.id" object-fit="contain" style="width: 100%;height: 205px;" :src="item.video_path"
 							:poster="item.video_path + '?x-oss-process=video/snapshot,t_1000,f_jpg'"
-							controls :show-play-btn="false" play-btn-position="center" :picture-in-picture-mode="[]"></video>
+							controls play-btn-position="center" :picture-in-picture-mode="[]"></video>
 							<!-- <channel-video style="width: 100%;" finder-user-name="sphw3hmD3d4gIob" feed-token="token/ACqQcPIwR" :autoplay="true" object-fit="cover"></channel-video> -->
 					</view>
-					<view class="text-lg align-center flex flex-wrap">
-						<view class="margin-left-xs">{{ item.title }}</view>
+					<view class="text-lg">
+						<view>{{ item.title }}</view>
 					</view>
-					<view class="text-desc">{{ item.desc }}</view>
-					<!-- <view style="display: flex;justify-content: flex-end;align-items: center;margin-top: 30rpx;">
-						<view v-if="item.show_market" style="margin-right: 12rpx;text-decoration: line-through;">
-							<text class="text-lg">￥{{ item.price_market }}</text>
-						</view> 
-						<view style="margin-right: 12rpx;"><text class="text-sm">￥</text><text
-								class="text-lg">{{ item.price_selling }}</text></view>
-						<navigator :url="'/pages/shop/goods_detail/goods_detail?id=' + item.id" class="text-df"
-							style="border:1px #71717a solid;border-radius: 20rpx;padding: 0 40rpx;">立即购买</navigator>
-					</view> -->
-			
+					<view class="text-desc">{{ item.desc }}</view>		
 				</view>
-				<view style="margin-bottom: 60rpx;">
+				<!-- <view style="margin-bottom: 60rpx;">
 					<view>
-						<!-- <video @play="videoPay" :id="'video_' + item.id" object-fit="contain" style="width: 100%;height: 205px;" :src="item.video_path"
-							:poster="item.video_path + '?x-oss-process=video/snapshot,t_1000,f_jpg'"
-							controls :show-play-btn="false" play-btn-position="center" :picture-in-picture-mode="[]"></video> -->
 							<channel-video style="width: 100%;" finder-user-name="sphw3hmD3d4gIob" feed-token="token/AuG4Osd6H" :autoplay="true" object-fit="cover"></channel-video>
 					</view>
 					<view class="text-lg align-center flex flex-wrap">
 						<view class="margin-left-xs">这个是视频号</view>
 					</view>
 					<view class="text-desc">从视频号点击</view>				
-				</view>
-				<view style="margin-bottom: 60rpx;">
-					<view>
-						<!-- <video @play="videoPay" :id="'video_' + item.id" object-fit="contain" style="width: 100%;height: 205px;" :src="item.video_path"
-							:poster="item.video_path + '?x-oss-process=video/snapshot,t_1000,f_jpg'"
-							controls :show-play-btn="false" play-btn-position="center" :picture-in-picture-mode="[]"></video> -->
-							<channel-video style="width: 100%;" finder-user-name="sphw3hmD3d4gIob" feed-token="token/AwQ7cPxxq" :autoplay="true" object-fit="cover"></channel-video>
-					</view>
-					<view class="text-lg align-center flex flex-wrap">
-						<view class="margin-left-xs">这个是视频号</view>
-					</view>
-					<view class="text-desc">从视频号点击</view>				
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<!-- <drag-button :isDock="true" :existTabBar="true" /> -->

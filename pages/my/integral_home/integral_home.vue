@@ -8,9 +8,9 @@
 				<navigator url="/pages/my/integral/integral"
 					style="border: #fff 1rpx solid;display: inline-block;border-radius: 40rpx;padding: 4rpx 30rpx;">积分明细
 				</navigator>
-				<navigator url="/pages/my/integral_exchange_logs/integral_exchange_logs"
+<!-- 				<navigator url="/pages/my/integral_exchange_logs/integral_exchange_logs"
 					style="border: #fff 1rpx solid;display: inline-block;border-radius: 40rpx;padding: 4rpx 30rpx;margin-left: 10rpx;">兑换记录
-				</navigator>
+				</navigator> -->
 			</view>
 <!-- 			<view class="container-xl bg-white margin-top-sm padding-sm radius-sm">
 				<view>做任务 领积分</view>
@@ -26,7 +26,48 @@
 					</view>
 				</view>
 			</view>
+			<view v-if="gifts_ex_list.length > 0" class="padding-lr-sm text-lg text-bold bg-white padding-tb-sm">兑换记录</view>
+			<view class="bg-white margin-bottom-sm padding-tb-xs padding-lr-sm" v-for="item in gifts_ex_list" :key="item.id">
+				<view>您于{{item.create_at}}兑换了</view>
+				<view class="flex margin-top-xs">
+					<view>
+						<image mode="aspectFill" style="height: 150rpx;width: 150rpx;" :src="item.gift.cover">
+						</image>
+					</view>
+					<view class="flex flex-direction" style="height: 150rpx;">
+						<view class="u-line-2 padding-tb-xs padding-lr-sm text-sm" style="max-height: 78rpx;">
+							{{item.gift.title}} × {{item.number}}件
+						</view>
+						<!-- <view class="padding-tb-xs padding-lr-sm">
+							<view>
+								<text class="text-sm">数量：{{item.number}}</text>
+							</view>
+						</view> -->
+						<view class="padding-tb-xs padding-lr-sm text-sm flex align-center justify-start">
+							<text>{{item.address_name}}</text>
+							<u--text mode="phone" :text="item.address_phone" format="encrypt" size="28rpx"
+									margin="0 0 0 6rpx"></u--text>
+						</view>
+						<view class="padding-tb-xs padding-lr-sm text-sm">{{item.address_province}}{{item.address_city}}{{item.address_area}}{{item.address_content}}</view>
+					</view>
+				</view>
+				<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center" @click.stop>
+					<view class="margin-left-sm" v-if="item.status===0" style="border-radius: 999rpx;">
+						<button type="warn" size="mini" @click="remove(item.id)" style="border-radius: 999rpx;">删除</button>
+					</view>
+					<view class="margin-left-sm" v-if="item.status===1" style="border-radius: 999rpx;">
+						<button type="default" size="mini" @click="cancel(item.id)" style="border-radius: 999rpx;">取消</button>
+					</view>
+					<view class="margin-left-sm" v-if="item.status===2">
+						<button type="default" size="mini" @click="$globalJump2View('/pages/my/integral_exchange_logs_logistics/integral_exchange_logs_logistics?id='+item.id, true)" style="border-radius: 999rpx;">查看物流</button>
+					</view>
+				</view>
+			
+			</view>
 		</view>
+		<u-empty v-if="status === 'nomore' && gifts_ex_list.length === 0" marginTop="44"
+			text="暂无兑换记录" icon="/static/empty_data.png"></u-empty>
+		<u-loadmore status="nomore" v-if="status === 'nomore' && gifts_ex_list.length > 0" />
 		<uni-popup ref="receive" type="bottom" border-radius="10px 10px 0 0" background-color="#fff">
 			<view style="padding: 20rpx;position: relative;">
 				<view @click="closeReceive" style="position: absolute;top: 20rpx;right: 20rpx;"><uni-icons type="clear"
@@ -66,33 +107,42 @@
 				total: 0,
 				loaded: false,
 				list: [],
-				checkItem: {}
+				checkItem: {},
+				status: 'loadmore',
+				gifts_ex_list: [],
+				page: 1
 			};
 		},
 		onLoad() {
-			const getTotal = axios.get('/api/v1/user/integral/total')
-			const getCoupon = axios.get('/api/v1/user/integral/coupon')
-			Promise.all([getTotal, getCoupon]).then(results => {
-				if (results[0].code === 1 && results[1].code === 1) {
-					this.total = results[0].data
-					this.list = results[1].data
-					this.$nextTick(() => {
-						this.loaded = true
-					})
-				} else {
+			checkLogin(() => {
+				const getTotal = axios.get('/api/v1/user/integral/total')
+				const getCoupon = axios.get('/api/v1/user/integral/coupon')
+				Promise.all([getTotal, getCoupon]).then(results => {
+					if (results[0].code === 1 && results[1].code === 1) {
+						this.total = results[0].data
+						this.list = results[1].data
+						this.$nextTick(() => {
+							this.loaded = true
+						})
+					} else {
+						uni.showToast({
+							title: "出错了，请返回重试",
+							icon: 'none',
+							duration: 1200
+						})
+					}
+				}).catch(error => {
 					uni.showToast({
 						title: "出错了，请返回重试",
 						icon: 'none',
 						duration: 1200
 					})
-				}
-			}).catch(error => {
-				uni.showToast({
-					title: "出错了，请返回重试",
-					icon: 'none',
-					duration: 1200
 				})
+				this.loadData()
 			})
+		},
+		onReachBottom() {
+			this.loadData()
 		},
 		methods: {
 			onReceive(item) {
@@ -121,6 +171,39 @@
 						icon:'none',
 						duration: 1200
 					})
+				})
+			},
+			loadData(){
+				if (this.status !== 'loadmore') {
+					return false
+				}
+				this.status = 'loading'
+				axios.get('/api/v1/user/integral/gift_exchange_logs', {
+					params: {
+						page: this.page
+					}
+				}).then(res => {
+					if (res.code === 1) {
+						this.gifts_ex_list = this.gifts_ex_list.concat(res.data.list)
+						this.page++
+						this.status = res.data.page.current >= res.data.page.pages ? 'nomore' : 'loadmore'
+						if (this.loaded === false) {
+							this.$nextTick(() => {
+								this.loaded = true
+							})
+						}
+						
+						console.log(this.status)
+						console.log(this.gifts_ex_list)
+				
+					}
+				}).catch(error => {
+					this.status = 'nomore'
+					if (this.loaded === false) {
+						this.$nextTick(() => {
+							this.loaded = true
+						})
+					}
 				})
 			}
 		}
