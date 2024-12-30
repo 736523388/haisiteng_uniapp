@@ -275,7 +275,7 @@
 			"path" : "pages/index/coupon_new/coupon_new",
 			"style" : 
 			{
-				"navigationBarTitleText" : "惊喜有礼",
+				"navigationBarTitleText" : "会员有礼",
 				"enablePullDownRefresh" : false
 			}
 		},

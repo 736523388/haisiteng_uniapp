@@ -1,10 +1,29 @@
 <template>
-	<view class="bg-white" style="min-height: 100vh;">
+	<view class="bg-white">
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
-		<view v-show="loaded">
-			<view class="container" v-for="(item,index) in list" :key="index">
-				<u-image v-if="item.cover" :src="item.cover" width="688rpx" height="688rpx" mode="aspectFill" />
-				<view class="coupon" :style="'background-image: url('+coupon_background_image+');'">
+		<view v-show="loaded" class="padding-bottom-xl">
+			<view class="container" v-for="(item,index) in list" :key="index" style="position: relative;">
+				<view class="text-bold padding-top-xl padding-bottom coupon-title" style="letter-spacing: 0.1em;color: #191944;">{{item.title}}</view>
+				<view style="border-radius: 8rpx;overflow: hidden;">
+					<view style="font-size: 0;">
+						<image v-if="item.cover" :src="item.cover" style="width: 690rpx;margin: 0;padding: 0;display: block;" mode="widthFix"></image>
+					</view>
+					
+					<view class="flex justify-end padding" style="background-color: #191944;width: 100%;color: #fff;">
+						<view class="flex-sub flex flex-direction justify-evenly align-start text-xs">
+							<view class="bg-white" style="color: #000;padding: 8rpx 16rpx;">使用规则</view>
+							<text class="padding-top" style="line-height: 1.6;">{{item.remark}}</text>
+						</view>
+						<view class="flex flex-direction justify-center padding-left-lg padding-right-sm align-center" style="border-left: 1px #fff dashed;letter-spacing: 0.2em;">
+							<view style="padding: 4rpx 10rpx 20rpx 10rpx;">{{ item.desc }}</view>
+							<view v-if="item.receive_type == 2" style="padding: 4rpx 10rpx 10rpx 10rpx;">￥{{ item.price }}</view>
+							<view class="bg-white" style="color: #000;padding: 4rpx 10rpx;" @click="receive(item)">{{item.receive_type == '1' ? '立即领取': '立即购买'}}</view>
+						</view>
+					</view>
+				</view>
+				
+				
+				<!-- <view class="coupon" :style="'background-image: url('+coupon_background_image+');'">
 					<view class="coupon-left">
 						<view>{{item.title}}</view>
 						<view class="text-xxs" style="margin-top: 10rpx;">有效期：{{item.expire_datetime}}</view>
@@ -20,7 +39,7 @@
 						</view>
 					</view>
 				</view>
-				<u-line margin="20rpx 0"></u-line>
+				<u-line margin="20rpx 0"></u-line> -->
 			</view>
 		</view>
 	</view>
@@ -40,34 +59,35 @@
 			};
 		},
 		onLoad() {
-			axios.get('/api/v2/coupon?position=2').then(res => {
+			axios.get('/api/v2/coupon?position=1').then(res => {
 				if (res.code === 1) {
 					this.list = res.data.list
-					this.loaded = true
+					this.$nextTick(() => {
+						this.loaded = true
+					})
+					
 				}
 			})
 		},
 		methods: {
-			receive(id) {
+			receive(item) {
 				checkLogin(() => {
-					axios.get(`/api/v1/user/coupon/receive/${id}`).then(res => {
-						uni.showToast({
-							title: res.info,
-							icon: res.code === 1 ? 'success' : 'none',
-							duration: 1200
+					let {id,receive_type} = item
+					if(receive_type == 1) {
+						axios.get(`/api/v1/user/coupon/receive/${id}`).then(res => {
+							uni.showToast({
+								title: res.info,
+								icon: res.code === 1 ? 'success' : 'none',
+								duration: 1200
+							})
+						}).catch(error => {
+							console.log(error)
+							this.$u.toast('网络错误，请稍后再试！')
 						})
-						if (res.code === 1) {
-							let index = this.list.findIndex(item => item.id === id)
-							if (index !== -1) {
-								setTimeout(() => {
-									this.$set(this.list[index], 'receive_status', 1)
-								}, 1200)
-							}
-						}
-					}).catch(error => {
-						console.log(error)
-						this.$u.toast('网络错误，请稍后再试！')
-					})
+					} else {
+						this.$u.toast('在线支付')
+					}
+					
 				})
 				
 			},
@@ -76,6 +96,14 @@
 </script>
 
 <style lang="scss" scoped>
+	page {
+		background-color: #fff;
+	}
+	.coupon-title::before {
+		content: " ";
+		padding-right: 20rpx;
+		border-left: 2px solid #000;
+	}
 	.logo {
 		border: 1px solid #374151;
 	}

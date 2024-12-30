@@ -83,7 +83,7 @@
 					<view class="flex margin-left flex-direction justify-end flex-sub"
 						style="height: 100%;">
 						<view style="margin-bottom: auto;letter-spacing: 2rpx;">{{detail.name}}</view>
-						<view class="margin-left-xs text-lighter">
+						<view class="margin-left-xs">
 							<text>¥</text><text style="margin-left: 4rpx;">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
 						</view>
 					</view>

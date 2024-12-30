@@ -18,14 +18,14 @@
 								<image src="/static/images/logo.svg" mode="heightFix" style="height: 100%;width: 120rpx;">
 								</image>
 							</view>
-							<view class="text-xxs margin-top-xs">·{{item.remark}}</view>
+							<view class="text-xxs margin-top-xs"><text>{{item.remark}}</text></view>
 							<view class="margin-top-xs" v-if="item.type === 2">核销码 {{item.code}}</view>
 						</view>
 						<view class="coupon-right">
 							<view class="text-xl">{{ item.desc }}</view>
 							<view class="margin-top-sm margin-right-sm">
 								<u-button type="primary"
-									@click.native.stop="$globalJump2View('/pages/shop/goods_index/goods_index')"
+									@click.native.stop="go2view(item)"
 									:disabled="item.status !== 1" size="small"
 									:text="item.status === 1 ? '未使用': (item.status === 0 ? '已过期':'已使用')"></u-button>
 							</view>
@@ -46,16 +46,15 @@
 								<image src="/static/images/logo.svg" mode="heightFix" style="height: 100%;width: 120rpx;">
 								</image>
 							</view>
-							<view class="text-xxs margin-top-xs">·{{item.remark}}</view>
+							<view class="text-xxs margin-top-xs"><text>{{item.remark}}</text></view>
 							<view class="margin-top-xs" v-if="item.type === 2">核销码 {{item.code}}</view>
 						</view>
 						<view class="coupon-right">
 							<view class="text-xl">{{ item.desc }}</view>
 							<view class="margin-top-sm margin-right-sm">
 								<u-button type="primary"
-									@click.native.stop="$globalJump2View('/pages/shop/goods_index/goods_index')"
 									:disabled="item.status !== 1" size="small"
-									:text="item.status === 1 ? '未使用': (item.status === 0 ? '已过期':'已使用')"></u-button>
+									:text="item.statusTxt"></u-button>
 							</view>
 						</view>
 					</view>
@@ -78,7 +77,6 @@
 			return {
 				current: 0,
 				coupon_background_image: "https://hst.dev.cqclxsc.com/upload/a1/69ab59816e29a0164befa8ee8bcdad.jpg",
-				list: [],
 				available: [],
 				unavailable: [],
 				loaded: false
@@ -96,16 +94,29 @@
 					const unavailable = []
 					res.data.list.forEach((item, index) => {
 						if (item.status === 1) {
+							item.statusTxt = '未使用'
 							available.push(item)
 						} else {
+							switch (item.status) {
+								case 2:
+									item.statusTxt = '已使用'
+									break;
+								case 0:
+									item.statusTxt = '已过期'
+									break;
+								default:
+									item.statusTxt = '已回收'
+							}
 							unavailable.push(item)
 						}
 					})
 					this.available = available
 					this.unavailable = unavailable
 					console.log(available, unavailable)
-					this.list = res.data.list
-					this.loaded = true
+					this.$nextTick(() => {
+						this.loaded = true
+					})
+					
 				}
 			})
 		},
@@ -115,6 +126,18 @@
 					this.current = e.currentIndex;
 				}
 			},
+			go2view(e){
+				console.log(e)
+				if(e.range == 2) {
+					uni.navigateTo({
+						url: '/pages/index/maintenance_service/maintenance_service'
+					})
+				} else {
+					uni.switchTab({
+						url: '/pages/shop/goods_index/goods_index'
+					})
+				}
+			}
 		}
 	}
 </script>

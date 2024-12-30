@@ -307,6 +307,10 @@ image {
   justify-content: space-around;
 }
 
+.justify-evenly {
+	justify-content: space-evenly;
+}
+
 /*  -- 内外边距 -- */
 
 .margin-0 {
@@ -511,6 +515,10 @@ image {
 
 .padding-top-xl {
   padding-top: 50rpx;
+}
+
+.padding-top-xxl {
+  padding-top: 60rpx;
 }
 
 .padding-right-xs {
