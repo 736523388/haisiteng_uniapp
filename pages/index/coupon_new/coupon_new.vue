@@ -65,7 +65,6 @@
 					this.$nextTick(() => {
 						this.loaded = true
 					})
-					
 				}
 			})
 		},
@@ -74,7 +73,12 @@
 				checkLogin(() => {
 					let {id,receive_type} = item
 					if(receive_type == 1) {
+						uni.showLoading({
+							mask: true,
+							title: '请稍后..'
+						})
 						axios.get(`/api/v1/user/coupon/receive/${id}`).then(res => {
+							uni.hideLoading()
 							uni.showToast({
 								title: res.info,
 								icon: res.code === 1 ? 'success' : 'none',
@@ -82,10 +86,51 @@
 							})
 						}).catch(error => {
 							console.log(error)
+							uni.hideLoading()
 							this.$u.toast('网络错误，请稍后再试！')
 						})
 					} else {
-						this.$u.toast('在线支付')
+						uni.showLoading({
+							mask: true,
+							title: '请稍后..'
+						})
+						axios.post('/api/v1/user/coupon_order', {
+							coupon_id: id
+						}).then(res => {
+							uni.hideLoading()
+							console.log(res)
+							if(res.code !== 1) {
+								this.$u.toast(res.info, 1200)
+							} else {
+								//发起支付
+								uni.requestPayment({
+									...res.data.param,
+									success: (red) => {
+										console.log('支付结果', red)
+									},
+									complete: (red) => {
+										console.log(red)
+										if (red.errMsg == "requestPayment:ok") {
+											this.$u.toast('支付成功', 1200)
+											setTimeout(() => {
+												uni.navigateTo({
+													url: '/pages/my/coupon/coupon'
+												})
+											}, 1500)
+										} else if(red.errMsg != "requestPayment:fail cancel") {
+											this.$u.toast('支付未完成', 1200)
+										}
+									}
+								})
+							}
+						}).catch(error => {
+							uni.hideLoading()
+							uni.showToast({
+								title: '网络错误，请稍后再试！',
+								icon: 'none',
+								duration: 1200
+							})
+						})
 					}
 					
 				})
