@@ -2,16 +2,14 @@
 	<view>
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
-			<view class="header-box">
-				<view class="order-status">
-					<view class="order-status-title">
-						<text style="margin-left: 8rpx;">{{order_status_txt_arr[order_desc.status] || ''}}</text>
-					</view>
-					<view class="order-status-desc">{{order_status_desac_arr[order_desc.status] || ''}}</view>
+			<view class="margin-tb flex justify-center align-center">
+				<uni-icons :type="order_status_icon_arr[order_desc.status]" size="20"></uni-icons>
+				<view class="text-lg text-bold">
+					<text>{{order_status_txt_arr[order_desc.status] || ''}}</text>
 				</view>
 			</view>
-			<view class="bg-white">
-				<view class="goods-box">
+			<view class="container-xl bg-white radius-sm">
+				<view class="padding-sm">
 					<view class="goods-item" v-for="(item, index) in order_desc.items" :key="index">
 						<u-image width="161rpx" height="161rpx" :src="item.goods_cover"></u-image>
 						<view class="goods-title-price">
@@ -26,16 +24,37 @@
 					</view>
 				</view>
 			</view>
-			<view class="bg-white">
-				<u-cell-group :border="false">
-					<u-cell :border="false" title="商品总金额" :value="'¥'+order_desc.goods_amount_total_original"></u-cell>
-					<u-cell :border="false" title="活动优惠" :value="'- ¥'+order_desc.goods_activity_discount_amount"></u-cell>
-					<u-cell :border="false" title="积分抵扣" :value="'- ¥'+order_desc.amount_integral"></u-cell>
-					<u-cell :border="false" title="运费" :value="order_desc.amount_express > 0 ?'¥'+order_desc.amount_express:'包邮'"></u-cell>
-					<u-cell :border="false" title="需付款：" :value="'¥'+order_desc.amount_real"></u-cell>
-				</u-cell-group>
-			</view>
 			<view class="container-xl bg-white padding-sm margin-top radius-xs">
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>商品总金额</view>
+					<view class="flex align-center">
+						<view>¥{{order_desc.goods_amount_total_original}}</view>
+					</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>活动优惠</view>
+					<view class="flex align-center">
+						<view>¥{{order_desc.goods_activity_discount_amount}}</view>
+					</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>积分抵扣</view>
+					<view class="flex align-center">
+						<view>¥{{order_desc.amount_integral}}</view>
+					</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>运费</view>
+					<view class="flex align-center">
+						<view>{{order_desc.amount_express > 0 ?'¥'+order_desc.amount_express:'包邮'}}</view>
+					</view>
+				</view>
+				<view class="flex align-center justify-between padding-tb-xs">
+					<view>需付款</view>
+					<view class="flex align-center">
+						<view>¥{{order_desc.amount_real}}</view>
+					</view>
+				</view>
 				<view class="flex align-center justify-between padding-tb-xs">
 					<view>订单编号</view>
 					<view class="flex align-center">
@@ -59,7 +78,7 @@
 			<view class="action-fiexd">
 				<view class="margin-right-sm" v-if="order_desc.status === 0" style="display: inline-block;">
 					<u-button type="error" size="small" :data-order_no="order_desc.order_no" @click.native.stop="remove"
-						text="删除" plain shape="circle"></u-button>
+						text="删除订单" plain shape="circle"></u-button>
 				</view>
 				<view class="margin-right-sm"
 					v-if="order_desc.status === 1 || order_desc.status === 2 || order_desc.status === 3"
@@ -67,16 +86,52 @@
 					<u-button type="info" size="small" :data-order_no="order_desc.order_no" @click.native.stop="cancel"
 						text="取消订单" shape="circle"></u-button>
 				</view>
+				
+				<view v-if="order_desc.status === 6 && order_desc.inv_status === 1" class="margin-right-sm" style="display: inline-block;">
+					<u-button type="info" text="查看发票" @click.native.stop="showInvoice(order_desc.invoice_path)"
+						size="small" plain shape="circle"></u-button>
+				</view>
+				<view v-if="order_desc.status === 6 && order_desc.inv_status === 0" class="margin-right-sm" style="display: inline-block;">
+					<u-button type="info" text="发票开具中" :disabled="true" size="small" plain
+						shape="circle"></u-button>
+				</view>
+				
+				<view v-if="order_desc.status === 6 && order_desc.inv_status === -1" class="margin-right-sm" style="display: inline-block;">
+					<u-button type="info" text="申请开票"
+						@click.native.stop="$globalJump2View('/pages/my/apply_invoice/apply_invoice?order_no='+order_desc.order_no, true)"
+						size="small" plain shape="circle"></u-button>
+				</view>
+				
 				<view class="margin-right-sm" v-if="order_desc.status === 2" style="display: inline-block;">
 					<u-button type="primary" size="small" :data-order_no="order_desc.order_no" @click.native.stop="pay"
 						text="付款" shape="circle"></u-button>
 				</view>
+				
+				<view v-if="order_desc.status === 4 && order_desc.r_count < 1" class="margin-right-sm" style="display: inline-block;">
+					<u-button type="error" text="申请退款" :data-order_no="order_desc.order_no"
+						@click.native.stop="$globalJump2View('/pages/my/refund_order_apply/refund_order_apply?order_no='+order_desc.order_no, true)"
+						size="small" plain shape="circle"></u-button>
+				</view>
+				
 				<view class="margin-right-sm" v-if="order_desc.status === 5" style="display: inline-block;">
 					<u-button type="primary" size="small" :data-order_no="order_desc.order_no"
 						@click.native.stop="receive" text="确认收货"></u-button>
 				</view>
 				<view class="margin-right-sm" v-if="order_desc.status > 4" style="display: inline-block;">
-					<button type="default" size="mini" @click.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+order_desc.order_no)">查看物流</button>
+				    <u-button type="primary" text="查看物流" @click.native.stop="$globalJump2View('/pages/my/logistics/logistics?order_no='+order_desc.order_no, true)"
+					size="small" plain shape="circle"></u-button>					
+				</view>
+				<view v-if="order_desc.r_count > 0" class="margin-right-sm" style="display: inline-block;">
+					<u-button type="error" text="退款/售后" :data-order_no="order_desc.order_no"
+						@click.native.stop="$globalJump2View('/pages/my/refund_order/refund_order?value='+order_desc.order_no, true)"
+						size="small" plain shape="circle"></u-button>
+				</view>
+				
+				<view v-if="order_desc.status === 6 && order_desc.r_count < 1 && order_desc.not_refund_timeout"
+					class="margin-right-sm" style="display: inline-block;">
+					<u-button type="error" text="申请售后" :data-order_no="order_desc.order_no"
+						@click.native.stop="$globalJump2View('/pages/my/refund_order/refund_order?value='+order_desc.order_no, true)"
+						size="small" plain shape="circle"></u-button>
 				</view>
 			</view>
 		</view>
@@ -94,9 +149,7 @@
 				orderid: '',
 				order_desc: {},
 				order_status_txt_arr: ['已取消', '待支付', '待支付', '支付中', '待发货', '待收货', '已完成'],
-				order_status_icon_arr: ['warning-o', 'tosend', 'tosend', 'pending-payment', 'paid', 'logistics',
-					'comment-o', 'notes-o'
-				],
+				order_status_icon_arr: ['info', 'info', 'info', 'wallet', 'wallet', 'wallet','checkbox'],
 				order_status_desac_arr: ['订单已取消，感谢您的支持', '等待付款，请在半小时内支付', '等待付款，请在半小时内支付', '等待付款，请在半小时内支付',
 					'订单已支付，稍后为您安排发货', '订单配送中，请留意签收~', '订单已收货，请进行评价哦~', '订单已完成，感谢您的支持'
 				]
@@ -118,6 +171,22 @@
 					}
 
 				}).catch(error => {})
+			},
+			showInvoice(invoice_path) {
+				uni.downloadFile({
+					url: invoice_path,
+					success: res => {
+						console.log(res)
+						// #ifndef H5
+						uni.openDocument({
+							filePath: res.tempFilePath,
+							fileType: 'pdf',
+							showMenu: true
+						})
+						// #endif
+			
+					}
+				})
 			},
 			cancel(e) {
 				uni.showModal({
@@ -304,12 +373,10 @@
 		padding-top: 30rpx;
 		margin: 0 auto;
 		text-align: center;
+		.order-status-title {
+			font-size: 32rpx;
+		}
 	}
-
-	.order-status .order-status-title {
-		font-size: 32rpx;
-	}
-
 	.express {
 		position: absolute;
 		top: 170rpx;
@@ -342,13 +409,6 @@
 
 	.copy-btn {
 		margin-left: 20rpx;
-	}
-
-	.goods-box {
-		width: 710rpx;
-		margin: 0 auto;
-		padding-bottom: 20rpx;
-		margin-top: 30rpx;
 	}
 
 	.goods-item {

@@ -2,22 +2,23 @@
 	<view class="bg-white">
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-show="loaded" class="padding-bottom-xl">
-			<view class="container" v-for="(item,index) in list" :key="index" style="position: relative;">
-				<view class="text-bold padding-top-xl padding-bottom coupon-title" style="letter-spacing: 0.1em;color: #191944;">{{item.title}}</view>
+			<view class="container padding-bottom" v-for="(item,index) in list" :key="index" style="position: relative;">
+				<view v-if="index > 0" class="video-line"></view>
+				<view class="text-bold padding-top padding-bottom coupon-title" style="letter-spacing: 0.1em;color: #191944;">{{item.title}}</view>
 				<view style="border-radius: 8rpx;overflow: hidden;">
 					<view style="font-size: 0;">
 						<image v-if="item.cover" :src="item.cover" style="width: 690rpx;margin: 0;padding: 0;display: block;" mode="widthFix"></image>
 					</view>
 					
-					<view class="flex justify-end padding" style="background-color: #191944;width: 100%;color: #fff;">
+					<view class="flex justify-end padding padding-tb-sm" style="background-color: #191944;width: 100%;color: #fff;">
 						<view class="flex-sub flex flex-direction justify-evenly align-start text-xs">
-							<view class="bg-white" style="color: #000;padding: 8rpx 16rpx;">使用规则</view>
-							<text class="padding-top" style="line-height: 1.6;">{{item.remark}}</text>
+							<view class="bg-white" style="color: #191944;padding: 8rpx 16rpx;">使用规则</view>
+							<text class="padding-top-sm" style="line-height: 1.6;">{{item.remark}}</text>
 						</view>
-						<view class="flex flex-direction justify-center padding-left-lg padding-right-sm align-center" style="border-left: 1px #fff dashed;letter-spacing: 0.2em;">
-							<view style="padding: 4rpx 10rpx 20rpx 10rpx;">{{ item.desc }}</view>
-							<view v-if="item.receive_type == 2" style="padding: 4rpx 10rpx 10rpx 10rpx;">￥{{ item.price }}</view>
-							<view class="bg-white" style="color: #000;padding: 4rpx 10rpx;" @click="receive(item)">{{item.receive_type == '1' ? '立即领取': '立即购买'}}</view>
+						<view class="flex flex-direction justify-center padding-left-lg padding-right-xs align-center" style="border-left: 1px #989898 dashed;letter-spacing: 0.2em;">
+							<!-- <view style="padding: 4rpx 10rpx 20rpx 10rpx;">{{ item.desc }}</view> -->
+							<view v-if="item.receive_type == 2" style="padding: 4rpx 10rpx 20rpx 10rpx;">￥{{ item.price }}</view>
+							<view class="bg-white text-bold" style="color: #191944;padding: 8rpx 16rpx;" @click="receive(item)">{{item.receive_type == '1' ? '立即领取': '立即购买'}}</view>
 						</view>
 					</view>
 				</view>
@@ -216,5 +217,20 @@
 
 	.dot-bottom {
 		bottom: -16rpx;
+	}
+	
+	.video-line::after {
+		content: " ";
+		position: absolute;
+		top: 0;
+		// right: 0;
+		// bottom: 0;
+		left: 0;
+		height: 1px;
+		right: 0;
+		background-color: #ccc;
+		transform: scaleY(0.5);
+		transform-origin: top;
+		// border-top: 1px solid #ccc;
 	}
 </style>

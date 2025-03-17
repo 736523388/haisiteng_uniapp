@@ -49,7 +49,7 @@
 					</view>
 					<view style="padding: 0 10rpx 20rpx 0;" class="flex justify-end align-center" @click.stop>
 						<view v-if="value.status === 0 && value.r_count < 1" class="margin-left-sm">
-							<u-button type="primary" @click.native.stop="remove" text="删除订单"
+							<u-button type="error" @click.native.stop="remove" text="删除订单"
 								:data-order_no="value.order_no" size="small" plain shape="circle"></u-button>
 						</view>
 						<view v-if="value.status === 1 || value.status === 2 || value.status === 3"
@@ -195,7 +195,7 @@
 			};
 		},
 		onLoad(options) {
-			console.log(options)
+			// console.log(options)
 			if (options.status) {
 				this.active = Number(options.status)
 			}
@@ -228,14 +228,14 @@
 				})
 			},
 			tabsChange(event) {
-				console.log(event)
+				// console.log(event)
 				this.active = event.index
 				this.loadData()
 			},
 			loadData: function() {
 				// 获取全部订单
 				let menu = this.orderMenu[this.active]
-				console.log(menu)
+				// console.log(menu)
 				if (menu.loaded !== false || menu.loading !== false) {
 					return false
 				}

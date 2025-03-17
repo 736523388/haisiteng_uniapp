@@ -12,7 +12,7 @@
 					<u-avatar :src="userinfo.headimg ? userinfo.headimg : avatarUrl" mode="square"
 						size="100rpx"></u-avatar>
 					<view class="margin-left-sm" style="line-height: 50rpx;">
-						<view>{{userinfo.nickname}}</view>
+						<view>{{userinfo.nickname || '未设置昵称'}}</view>
 						<view>
 							<u-icon name="phone-fill" :label="userinfo.phone ? userinfo.phone : '未绑定手机'"
 								labelPos="right" />

@@ -500,6 +500,13 @@
 			{
 				"navigationBarTitleText" : "支付结果"
 			}
+		},
+		{
+			"path" : "pages/my/service/user_detail/user_detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "用户详情"
+			}
 		}
 	],
 	"tabBar": {

@@ -90,6 +90,11 @@
 					uni.setStorageSync('choose_user', item)
 					// 把所选用户信息保存好
 					uni.navigateBack()
+				} else {
+					uni.setStorageSync('choose_user', item)
+					uni.navigateTo({
+						url: '/pages/my/service/user_detail/user_detail?id=' + item.id
+					})
 				}
 			}
 		}

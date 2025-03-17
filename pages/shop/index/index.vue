@@ -70,15 +70,12 @@
 		methods: {
 			bindfullscreenchange(e){
 				console.log(e)
-				// if(e.detail.fullScreen === false) {
-				// 	let id = e.currentTarget.id
-				// 	for(let item of this.list) {
-				// 		if(item.videoContext === null || item.videoContext === undefined) {
-				// 			item.videoContext = uni.createVideoContext('video_' +item.id)
-				// 		}
-				// 		item.videoContext.pause()
-				// 	}
-				// }
+				if(e.detail.fullScreen === false) {
+					let id = e.currentTarget.id
+					for(let item of this.list) {
+						item.videoContext.pause()
+					}
+				}
 			},
 			videoPay(e){
 				console.log(e)

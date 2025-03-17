@@ -1,4 +1,5 @@
 <template>
+	<page-meta :page-style="'overflow:'+(showSpecFlag?'hidden':'visible')"></page-meta>
 	<view>
 		<u-loading-page :loading="!loaded" loading-text="My Hastens" loading-mode="semicircle"></u-loading-page>
 		<view v-if="loaded">
@@ -24,23 +25,25 @@
 						<view class="margin-right-sm text-lg text-lighter">
 							<text>￥{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
 						</view>
-						<view v-if="detail.price_market != detail.price_selling" class="flex align-center text-lighter" style="padding: 4rpx 10rpx;border-radius: 999rpx;opacity: .7;text-decoration: line-through;">
+						<view v-if="detail.price_market != detail.price_selling" class="flex align-center text-lighter"
+							style="padding: 4rpx 10rpx;border-radius: 999rpx;opacity: .7;text-decoration: line-through;">
 							<text>原价￥{{ checkspec.price_market ? checkspec.price_market:detail.price_market }}</text>
 						</view>
 					</view>
 					<!-- <view style="opacity: .5;">已售{{detail.stock_total_txt}}</view> -->
 				</view>
-				<view class="text-sm margin-top-sm goods-integral" v-if="detail.integral_num > 0">积分可抵扣￥{{detail.integral_price}}</view>
-				
-				
+				<view class="text-sm margin-top-sm goods-integral" v-if="detail.integral_num > 0">
+					积分可抵扣￥{{detail.integral_price}}</view>
+
+
 			</view>
 			<!-- <view class="flex align-center justify-between bg-white margin-top-xs padding-lr padding-tb-sm" @click="showSpecModal">
-				<view>当前选择</view>
-				<view class="flex align-center" :class="{'opacity_5':!checkspec.price_selling}">
-					<view>{{ checkspec.price_selling ? checkspec.goods_spec_alias:'选择规格' }}</view>
-					<view class="margin-left-xs">＞</view>
-				</view>
-			</view> -->
+					<view>当前选择</view>
+					<view class="flex align-center" :class="{'opacity_5':!checkspec.price_selling}">
+						<view>{{ checkspec.price_selling ? checkspec.goods_spec_alias:'选择规格' }}</view>
+						<view class="margin-left-xs">＞</view>
+					</view>
+				</view> -->
 			<view class="margin-top-sm text-center" style="opacity: .7;">一 详情 一</view>
 			<view class="margin-top-sm" style="padding-bottom: 160rpx;">
 				<rich-text style="font-size: 0;" :nodes="detail.content"></rich-text>
@@ -56,21 +59,25 @@
 			</view>
 			<view style="position: relative;width: 100rpx;padding: 10rpx 0;">
 				<button @click="gotoShopCart" class="u-reset-button custom-button" hover-class="bg-gray">
-						<uni-icons type="cart" size="36"></uni-icons>
+					<uni-icons type="cart" size="36"></uni-icons>
 				</button>
 				<u-badge numberType="ellipsis" :max="99" bgColor="#fa3534" type="error" :value="goods_cart_number"
 					:offset="[2,2]" absolute></u-badge>
 			</view>
 			<view class="flex justify-around flex-sub align-center" style="flex: 1;padding: 10rpx;margin-left: 10px;">
 				<view style="width: 45%;">
-					<button type="default" :plain="true" hover-class="none" @click="showSpecModal" :data-index="1" style="font-size: 14px;padding-left: 10px;padding-right: 10px;opacity: .7;">放入购物袋</button>
+					<button type="default" :plain="true" hover-class="none" @click="showSpecModal" :data-index="1"
+						style="font-size: 14px;padding-left: 10px;padding-right: 10px;opacity: .7;">放入购物袋</button>
 				</view>
 				<view style="width: 45%;">
-					<button type="default" @click="showSpecModal" :data-index="2" style="color: #fff;background-color: #0B1839;font-size: 14px;padding-left: 10px;padding-right: 10px;">即刻购买</button>
+					<button type="default" @click="showSpecModal" :data-index="2"
+						style="color: #fff;background-color: #0B1839;font-size: 14px;padding-left: 10px;padding-right: 10px;">即刻购买</button>
 				</view>
 			</view>
 
 		</view>
+
+
 		<!-- 弹出层部分 -->
 		<uni-popup ref="spec_popup" type="bottom" @change="onSpecPopupChange">
 			<!-- 选择规格 -->
@@ -78,13 +85,14 @@
 				<view class="spec-box-line"></view>
 				<view class="flex align-center margin-top-xl" style="height: 160rpx;">
 					<view style="width: 160rpx;height: 100%;">
-						<image :src="checkspecImage != '' ? checkspecImage : detail.cover" mode="scaleToFill" style="width: 100%;height: 100%;"></image>
+						<image :src="checkspecImage != '' ? checkspecImage : detail.cover" mode="scaleToFill"
+							style="width: 100%;height: 100%;"></image>
 					</view>
-					<view class="flex margin-left flex-direction justify-end flex-sub"
-						style="height: 100%;">
+					<view class="flex margin-left flex-direction justify-end flex-sub" style="height: 100%;">
 						<view style="margin-bottom: auto;letter-spacing: 2rpx;">{{detail.name}}</view>
 						<view class="margin-left-xs">
-							<text>¥</text><text style="margin-left: 4rpx;">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
+							<text>¥</text><text
+								style="margin-left: 4rpx;">{{ checkspec.price_selling ? checkspec.price_selling:detail.price_selling }}</text>
 						</view>
 					</view>
 				</view>
@@ -92,16 +100,22 @@
 					<view v-if="detail.specs && detail.specs.length > 0">
 						{{detail.specs.length == 1 ? '选择规格': item.name}}
 					</view>
-					<view class="flex flex-wrap margin-top"
-						v-if="(detail.specs && detail.specs.length > 0) || item.list.length > 1">
-						<view class="spec_item text-df"
-							:class="{active: value.is_seleted === true, 'disabled': value.is_seleted !== true && value.is_elective === false}"
-							:data-key1="index" :data-key2="key" @click='setSpecSeleted' v-for="(value,key) in item.list"
-							:key="value.spec_item" v-show="value.show">
-							{{value.name}}
-						</view>
+					<view>
+						<scroll-view scroll-y="true" class="scroll-Y">
+							<view class="flex flex-wrap margin-top"
+								v-if="(detail.specs && detail.specs.length > 0) || item.list.length > 1">
+								<view class="spec_item text-df"
+									:class="{active: value.is_seleted === true, 'disabled': value.is_seleted !== true && value.is_elective === false}"
+									:data-key1="index" :data-key2="key" @click='setSpecSeleted'
+									v-for="(value,key) in item.list" :key="value.spec_item" v-show="value.show">
+									{{value.name}}
+								</view>
+							</view>
+						</scroll-view>
 					</view>
+
 				</view>
+
 				<view class="flex align-center margin-tb-sm justify-between">
 					<view>数量</view>
 					<view @click.stop>
@@ -332,13 +346,13 @@
 						specs.forEach((v, vk) => {
 							this.checkSpecArr[vk] = ""
 							v.has_image = v.has_image || false
-							for(let tk in v.list) {
+							for (let tk in v.list) {
 								v.list[tk] = Object.assign(v.list[tk], {
 									is_seleted: false,
 									is_elective: this.checkIsElective(v.name + '::' + v.list[tk]
 										.name)
 								})
-							}					
+							}
 						})
 						// this.specChanged()
 						this.$nextTick(() => {
@@ -403,18 +417,18 @@
 				if (currentSpec.is_elective === false) {
 					return false
 				}
-				
+
 				currentSpec.is_seleted = !currentSpec.is_seleted
 				console.log(currentSpec)
 				if (currentSpec.is_seleted === true) {
 					this.checkSpecArr[i] = currentSpec.group + '::' + currentSpec.name
-					if(currentGroup.has_image) {
+					if (currentGroup.has_image) {
 						this.checkspecImage = currentSpec.image || ''
 					}
-					
+
 				} else {
 					this.checkSpecArr[i] = ''
-					if(currentGroup.has_image) {
+					if (currentGroup.has_image) {
 						this.checkspecImage = ''
 					}
 				}
@@ -489,33 +503,38 @@
 			border-radius: 999rpx;
 			font-size: 20rpx;
 		}
+
 		.screen-swiper {
 			min-height: 735rpx;
 		}
 	}
-	
-	.goods-integral{
+
+	.goods-integral {
 		background-color: #0B1839;
 		color: #fff;
 		display: inline-block;
 		padding: 0 10rpx;
 		border-radius: 6rpx;
 	}
-	
-	.spec-box{
+
+	.spec-box {
 		padding: 10rpx 40rpx 120rpx 40rpx;
 		margin-bottom: env(safe-area-inset-bottom);
 		border-radius: 20px 20px 0 0;
-		
-		.spec-box-line{
+
+		.spec-box-line {
 			width: 40px;
 			border-bottom: 3px solid #000;
 			margin: 0 auto;
 			opacity: .5;
 		}
+
+		.scroll-Y {
+			max-height: 300rpx;
+		}
 	}
 
-	
+
 
 	.spec_item {
 		// border: 1px solid #000;
