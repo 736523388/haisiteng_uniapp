@@ -15,17 +15,29 @@
 </template>
 
 <script>
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		data() {
 			return {
 
 			};
 		},
+		computed: {
+			...mapState({
+				userinfo: state => state.user.userinfo
+			}),
+		},
 		// #ifndef APP | H5 |MP-BAIDU
 		onShareAppMessage(options) {
+			let uid = ''
+			if(this.userinfo){
+				uid = this.userinfo.id
+			}
 			return {
 				title: '您的好友正在为您推荐宝藏床具~点击开启理想睡眠之旅！',
-				path: '/pages/index/share_detail/share_detail?uid=' + this.$store.state.user.userinfo.id,
+				path: '/pages/index/share_detail/share_detail?uid=' + uid,
 				imageUrl: 'https://hst-default.oss-cn-chengdu.aliyuncs.com/images/share_icon.jpg'
 			}
 		}
