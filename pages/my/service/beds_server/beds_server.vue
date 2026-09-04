@@ -25,7 +25,8 @@
 				<view class="flex justify-between align-center">
 					<view>
 						<view>订单编号：{{item.order_no}}</view>
-						<view class="text-xs text-desc">{{item.create_at}}</view>
+						<view class="text-xs text-desc">提交时间：{{item.create_at}}</view>
+						<view class="text-xs text-desc">服务完成时间：{{item.complete_at}}</view>
 					</view>
 					<view class="text-bold">
 						{{item.status == 2 ? '待确认':item.status == 3 ?'服务中':'已完成'}}

@@ -125,6 +125,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<view style="height: 2rpx;"></view>
 		<drag-button :isDock="true" :existTabBar="true" :Hedge="30" />
 	</view>
 

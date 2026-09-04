@@ -24,12 +24,9 @@
 			</view>
 			<view style="font-size: 24rpx;text-align: center;margin: 20rpx auto;width: 580rpx;">
 				<switch style="transform: scale(0.6,0.6);height: 36rpx;width: 36rpx;" type="checkbox" :checked="agree"
-					@change="switch2Change" /><text style="margin-left: 6rpx;">打勾表示您已阅读并同意以下协议</text>
-				<navigator style="display: inline-block;color: #1989fa;"
-					url="/pages/agreement/agreement?name=user_agreement" hover-class="navigator-hover">
-					《用户服务协议》</navigator>、<navigator style="display: inline-block;color: #1989fa;"
-					url="/pages/agreement/agreement?name=privacy_statement" hover-class="navigator-hover">
-					《隐私政策》</navigator>
+					@change="switch2Change" /><text style="margin-left: 6rpx;">我已阅读并同意</text>
+				<view style="display: inline-block;color: #1989fa;" @click="openPrivacyContract">
+					《用户服务协议》</view>
 			</view>
 		</block>
 		<block v-else>
@@ -111,6 +108,9 @@
 			}),
 		},
 		methods: {
+			openPrivacyContract(){
+				wx.openPrivacyContract()
+			},
 			showAgreeToast() {
 				uni.$u.toast('请勾选协议');
 			},

@@ -57,7 +57,7 @@
 	export default {
 		data() {
 			return {
-				coupon_background_image: "https://hst.dev.cqclxsc.com/upload/a1/69ab59816e29a0164befa8ee8bcdad.jpg",
+				coupon_background_image: "https://oss.myhastens.com/69ab59816e29a0164befa8ee8bcdad.jpg",
 				value: '',
 				list: [],
 				loading: false,

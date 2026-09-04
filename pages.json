@@ -507,6 +507,15 @@
 			{
 				"navigationBarTitleText" : "用户详情"
 			}
+		},
+		{
+			"path" : "pages/index/activity/activity",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {
@@ -514,6 +523,7 @@
 		"color": "#AFAFAF",
 		"selectedColor": "#000030",
 		"borderStyle": "white",
+		"fontSize": "12px",
 		"list": [
 			{
 				"pagePath": "pages/index/index",
@@ -540,8 +550,7 @@
 				"iconPath": "/static/tabbar/my_o.png",
 				"selectedIconPath": "/static/tabbar/my.png"
 			}
-		],
-		"fontSize": "12px"
+		]
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

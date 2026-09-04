@@ -1,6 +1,6 @@
 import store from '@/store/index.js'; //需要引入store
 import Request from 'luch-request'
-var BASE_URL = 'https://hst.dev.cqclxsc.com'
+var BASE_URL = 'https://api-dev.myhastens.com'
 // var BASE_URL = 'http://localhost:8000'
 // #ifdef MP-WEIXIN
 const accountInfo = uni.getAccountInfoSync();
@@ -11,11 +11,11 @@ if (accountInfo.miniProgram) {
 	if (version === 'release') {
 		// 正式版
 		console.log('正式版');
-		BASE_URL = 'https://hst.dev.cqclxsc.com'
+		BASE_URL = 'https://api.myhastens.com'
 	} else if (version === 'trial') {
 		// 体验版
 		console.log('体验版');
-		BASE_URL = 'https://hst.test.cqclxsc.com'
+		BASE_URL = 'https://api-dev.myhastens.com'
 	}
 }
 // #endif

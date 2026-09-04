@@ -11,68 +11,10 @@
  *
  * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
  */
-// @import '@/uni_modules/uni-scss/variables.scss';
+@import '@/uni_modules/uni-scss/variables.scss';
 /* uview颜色变量 */
 @import '@/uni_modules/uview-ui/theme.scss';
-
-$u-main-color: #303133;
-$u-content-color: #606266;
-$u-tips-color: #afafaf;
-$u-light-color: #c0c4cc;
-$u-border-color: #e4e7ed;
-$u-bg-color: #f8f8f8;
-
-$u-primary: #000030;
-$u-primary-dark: #398ade;
-$u-primary-disabled: #9acafc;
-$u-primary-light: #ecf5ff;
-
-$u-warning: #f9ae3d;
-$u-warning-dark: #f1a532;
-$u-warning-disabled: #f9d39b;
-$u-warning-light: #fdf6ec;
-
-$u-success: #5ac725;
-$u-success-dark: #53c21d;
-$u-success-disabled: #a9e08f;
-$u-success-light: #f5fff0;
-
-$u-error: #d81e06;
-$u-error-dark: #dd6161;
-$u-error-disabled: #fab6b6;
-$u-error-light: #fef0f0;
-
-$u-info: #909399;
-$u-info-dark: #767a82;
-$u-info-disabled: #c4c6c9;
-$u-info-light: #f4f4f5;
-
-$u-type-primary: #000030;
-$u-type-error: #fa3534;
-$u-type-warning: #ff9900;
-$u-type-success: #19be6b;
-$u-type-info: #909399;
-$u-type-primary-light: #ecf5ff;
-$u-type-error-light: #fef0f0;
-$u-type-warning-light: #fdf6ec;
-$u-type-success-light: #dbf1e1;
-$u-type-info-light: #f4f4f5;
-$u-type-primary-dark: #000050;
-$u-type-error-dark: #dd6161;
-$u-type-warning-dark: #f29100;
-$u-type-success-dark: #18b566;
-$u-type-info-dark: #82848a;
-$u-type-primary-disabled: #c8c9cc;
-$u-type-error-disabled: #fab6b6;
-$u-type-warning-disabled: #fcbd71;
-$u-type-success-disabled: #71d5a1;
-$u-type-info-disabled: #c8c9cc;
-
-$u-form-item-border-color: #dcdfe6;
-$u-form-item-height: 70rpx;
-// 小按钮的padding值调整
-$u-button-small-padding: 0px 10px;
-
+@import "@/static/uview.theme.scss";
 
 /* 下面是uni的样式 */
 /* 行为相关颜色 */

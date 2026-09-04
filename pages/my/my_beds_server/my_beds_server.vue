@@ -18,7 +18,7 @@
 				<view class="flex justify-between align-center">
 					<view>
 						<view>订单编号：{{item.order_no}}</view>
-						<view class="text-xs text-desc">{{item.create_at}}</view>
+						<view class="text-xs text-desc">提交时间：{{item.create_at}}</view>
 					</view>
 					<view v-if="item.status == 1" class="text-bold">待付款</view>
 					<view v-if="item.status == 0" class="text-bold">已取消</view>
@@ -33,7 +33,9 @@
 					<view>联 系 人：{{val.user_name}} {{val.user_phone}}</view>
 					<view>服务地址：{{val.user_province}}{{val.user_city}}{{val.user_area}}{{val.user_address}}</view>
 					<view>服务时间：{{val.server_date}}{{val.server_pm}}</view>
+					
 					<view v-if="val.status > 1">服务状态：{{val.status == 2 ? '待确认': val.status == 3 ? '待服务':'已完成'}}</view>
+					<view>服务完成时间：{{val.complete_at || '-'}}</view>
 					<view v-if="val.status == 3" style="padding: 10rpx 0;" class="flex">
 						<view>
 							<u-button type="primary" size="small" :data-parent_index="index" :data-index="idx"
