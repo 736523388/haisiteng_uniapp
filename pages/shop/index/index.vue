@@ -104,16 +104,16 @@
 						this.list = this.list.concat(res.data.list)
 						this.page++
 						this.status = res.data.page.current >= res.data.page.pages ? 'nomore' : 'loadmore'
-						if (this.loaded === false) {
-							this.$nextTick(() => {
+						this.$nextTick(() => {
+							if (this.loaded === false) {
 								this.loaded = true
-								for(let item of this.list) {
-									if(item.videoContext === null || item.videoContext === undefined) {
-										item.videoContext = uni.createVideoContext('video_' +item.id)
-									}
+							}
+							for(let item of this.list) {
+								if(item.videoContext === null || item.videoContext === undefined) {
+									item.videoContext = uni.createVideoContext('video_' +item.id)
 								}
-							})
-						}
+							}
+						})
 					}
 				}).catch(error => {
 					console.log(error)
