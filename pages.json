@@ -518,6 +518,22 @@
 			}
 		}
 	],
+	"subPackages": [
+		{
+			"root": "pages/index/vividus",
+			"pages": [
+				{
+					"path": "vividus",
+					"style": {
+						"navigationBarTitleText": "Vividus 20周年",
+						"navigationBarBackgroundColor": "#ffffff",
+						"enablePullDownRefresh": false
+					},
+					"needLogin": false
+				}
+			]
+		}
+	],
 	"tabBar": {
 		"custom": false,
 		"color": "#AFAFAF",

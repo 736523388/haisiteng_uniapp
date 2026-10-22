@@ -1,0 +1,15 @@
+{
+  "appid": "wx31d69efd89723e5c",
+  "page": "pages/shop/goods_integral/goods_integral",
+  "env_version": "release",
+  "url_link": {
+    "errcode": 0,
+    "errmsg": "ok",
+    "url_link": "https://wxmpurl.cn/CQhzXuyv5Tb"
+  },
+  "short_link": {
+    "errcode": 0,
+    "errmsg": "ok",
+    "link": "#小程序://MyHastens/\\u79ef\\u5206\\u5546\\u***/mGxQErfsudzFn8I"
+  }
+}

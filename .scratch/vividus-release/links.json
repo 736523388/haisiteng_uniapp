@@ -1,0 +1,15 @@
+{
+  "appid": "wx31d69efd89723e5c",
+  "page": "pages/index/vividus/vividus",
+  "env_version": "release",
+  "url_link": {
+    "errcode": 0,
+    "errmsg": "ok",
+    "url_link": "https://wxmpurl.cn/tn4wXNAUzxl"
+  },
+  "short_link": {
+    "errcode": 0,
+    "errmsg": "ok",
+    "link": "#小程序://MyHastens/HastensVividus/hYBkTy5hYJDtdrB"
+  }
+}

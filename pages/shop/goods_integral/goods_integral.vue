@@ -52,7 +52,7 @@
 				</view>
 			</view>
 			<view class="page-bar">
-				<view class="text-xl" style="font-weight: bold;">超值兑换</view>
+				<view id="exchange" class="text-xl" style="font-weight: bold;">超值兑换</view>
 				<view class="text-sm" style="font-weight: bold;color: #71717a;margin-top: 12rpx;">SUPER VALUE</view>
 			</view>
 			<view>
@@ -110,7 +110,7 @@
 				path: 'pages/shop/goods_integral/goods_integral'
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			const getGoods = axios.get('/api/v1/goods?is_integral=1')
 			const getGift = axios.get('/api/v1/integral/gift')
 			let requests = [getGoods, getGift];
@@ -132,6 +132,11 @@
 					}
 					this.$nextTick(() => {
 						this.loaded = true
+						if (options && options.section === 'exchange') {
+							this.$nextTick(() => {
+								uni.pageScrollTo({ selector: '#exchange', duration: 0 })
+							})
+						}
 					})
 				}
 			}).catch(error => {
